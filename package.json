@@ -1,0 +1,8 @@
+{
+  "name": "srt",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:FabienLebas/srt.git",
+  "author": "Fabien Lebas <fabien.lebas@decathlon.com>",
+  "license": "MIT"
+}
