@@ -11,8 +11,9 @@ class App extends Component {
       <Router>
         <div>
             <Route exact path="/" component={Login}/>
-            <Route exact path="/home" component={Home}/>
             <Route exact path="/:store/pickingList" component={PickingList}/>
+            <Route path="/:store/home" render={(routerProps) => <Home {...routerProps}/>}/>
+
         </div>
       </Router>
     );

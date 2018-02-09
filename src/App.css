@@ -26,3 +26,19 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.jumbotron{
+  background-color: white;
+}
+
+.btn-primary{
+  margin: 10px;
+}
+
+.to-center{
+  vertical-align: middle !important;
+}
+
+.fa-shopping-cart{
+  color:grey;
+}
