@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../index.css';
 
 class Home extends Component {
+<<<<<<< Updated upstream
   constructor(props){
     super(props);
     this.state = {
@@ -155,6 +156,24 @@ class Home extends Component {
                 <input type="text" className="form-control" placeholder="Item code" value={this.state.valueItem} onChange={this.handleChangeItem} />
               </div>
               <button type="button" className="btn btn-success" onClick={() => this.getItemDetails(this.state.valueItem)}>OK</button>
+=======
+  render(){
+      return(
+        <div>
+          <div className = "container">
+          <h1>Home page</h1>
+            <div className="search-box">
+              <input value="Search" type="text" className="form-control" placeholder = "Search your code" onChange={e => console.log("hello")}/>
+              <i className="glyphicon glyphicon-search"></i>
+            </div>
+            <div className="panel panel-info">
+              <div className="panel-heading">
+                <h3 className="panel-title">Item Code for { this.props.givenName }</h3>
+              </div>
+              <div className="panel-body">
+                Item description
+              </div>
+>>>>>>> Stashed changes
             </div>
             <table className="table table-hover">
               <thead>

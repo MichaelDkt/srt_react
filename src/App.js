@@ -21,17 +21,3 @@ class App extends Component {
 }
 
 export default App;
-
-/*
-<Router>
-  <div>
-      <DisplayNavBar />
-      <Route exact path="/" component={Login}/>
-      <Route path="/login" render={() => <Login/>}/>
-      <Route path="/cart" component={Cart}/>
-      <Route path="/paymentOK" component={PaymentOK}/>
-      <Route path="/category/:category_id" render={(routerProps) => <ProductsList  {...routerProps}/>}/>
-      <Route path="/product/:product_id" render={(routerProps) => <ProductDetails  {...routerProps}/>}/>
-  </div>
-</Router>
-*/
