@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import '../index.css';
 
 class Home extends Component {
-<<<<<<< Updated upstream
   constructor(props){
     super(props);
     this.state = {
@@ -148,6 +148,16 @@ class Home extends Component {
       return(
         <div>
           <title>Item {this.state.item_id}</title>
+          <div className="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+            <h5 className="my-0 mr-md-auto font-weight-normal"> Backroom Tool </h5>
+            <a style = {{marginRight:"24px"}}>{this.props.newState.givenName}</a>
+              <GoogleLogout
+                buttonText="Logout"
+                className= "btn btn-outline-primary"
+                onLogoutSuccess={this.props.logOut}
+              >
+              </GoogleLogout>
+          </div>
           <div className = "jumbotron container">
             <h2>Item {this.state.item_id}</h2>
             <p>{this.state.item_description}</p>
@@ -156,24 +166,6 @@ class Home extends Component {
                 <input type="text" className="form-control" placeholder="Item code" value={this.state.valueItem} onChange={this.handleChangeItem} />
               </div>
               <button type="button" className="btn btn-success" onClick={() => this.getItemDetails(this.state.valueItem)}>OK</button>
-=======
-  render(){
-      return(
-        <div>
-          <div className = "container">
-          <h1>Home page</h1>
-            <div className="search-box">
-              <input value="Search" type="text" className="form-control" placeholder = "Search your code" onChange={e => console.log("hello")}/>
-              <i className="glyphicon glyphicon-search"></i>
-            </div>
-            <div className="panel panel-info">
-              <div className="panel-heading">
-                <h3 className="panel-title">Item Code for { this.props.givenName }</h3>
-              </div>
-              <div className="panel-body">
-                Item description
-              </div>
->>>>>>> Stashed changes
             </div>
             <table className="table table-hover">
               <thead>
