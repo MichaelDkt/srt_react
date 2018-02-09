@@ -1,3 +1,7 @@
 node_modules
+<<<<<<< HEAD
+=======
+node_modules/
+>>>>>>> fix .gitignore
 .env.local
 .env
