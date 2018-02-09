@@ -3,7 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Login from './views/loginview';
 import Home from './views/home';
-
+import PickingList from './views/pickingList';
 
 class App extends Component {
   render() {
@@ -12,6 +12,7 @@ class App extends Component {
         <div>
             <Route exact path="/" component={Login}/>
             <Route exact path="/home" component={Home}/>
+            <Route exact path="/:store/pickingList" component={PickingList}/>
         </div>
       </Router>
     );
@@ -32,6 +33,4 @@ export default App;
       <Route path="/product/:product_id" render={(routerProps) => <ProductDetails  {...routerProps}/>}/>
   </div>
 </Router>
-
-
 */
