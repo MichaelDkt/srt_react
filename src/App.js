@@ -12,7 +12,7 @@ class App extends Component {
         <div>
             <Route exact path="/" component={Login}/>
             <Route exact path="/home" component={Home}/>
-            <Route exact path="/:store/pickingList/:email" component={PickingList}/>
+            <Route exact path="/:store/pickingList" component={PickingList}/>
         </div>
       </Router>
     );
@@ -33,6 +33,4 @@ export default App;
       <Route path="/product/:product_id" render={(routerProps) => <ProductDetails  {...routerProps}/>}/>
   </div>
 </Router>
-
-
 */
