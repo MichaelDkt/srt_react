@@ -42,3 +42,7 @@
 .fa-shopping-cart{
   color:grey;
 }
+
+.fa-shopping-cart:hover{
+  cursor: pointer;
+}

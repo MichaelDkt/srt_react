@@ -59,16 +59,26 @@ class Home extends Component {
       })
   }
 
-  pick(address, item_id, qty){
+  stockMovement(address, item_id, qty, method){
+    let myBody;
+    console.log("method : " + method);
+    if(method === "pick") {
+      myBody = {
+        item_id: item_id,
+        qty: - qty
+      };
+    } else {
+      myBody = {
+        item_id: item_id,
+        qty: qty
+      };
+    }
     fetch(`/${this.props.match.params.store}/addresses/${address}`,{
       headers: {
         "Content-Type": "application/json"
       },
       method: "PUT",
-      body: JSON.stringify({
-        item_id: item_id,
-        qty: - qty
-      })
+      body: JSON.stringify(myBody)
     })
     .then(result => result.json())
     .then(result => {
@@ -76,12 +86,28 @@ class Home extends Component {
     })
   }
 
-  addStock(){
-    console.log("add stock " + this.state.valueQty);
-  }
-
-  addToPickingList(){
-    console.log("add to picking list " + this.state.valueAddress + this.state.valueQty);
+  addToPickingList(stockInfo){
+    const userEmail = "fabien.lebas@decathlon.com";
+    console.log("add to picking list " + `/${this.props.match.params.store}/pickingList/${userEmail}`);
+    console.log(stockInfo);
+    console.log(`${stockInfo.address_id}-${stockInfo.item_id}-${stockInfo.qty}`);
+    fetch(`/${this.props.match.params.store}/pickingList`,{
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "POST",
+      body: JSON.stringify({
+        stock_addresses_id: stockInfo.id,
+        email: userEmail,
+        qty: this.state.valueModal
+      })
+    })
+    .then(result => result.json())
+    .then(result => {
+      console.log("addToPickingList");
+      console.log(result);
+    })
+    ;
   }
 
   allocationModule(){
@@ -90,7 +116,7 @@ class Home extends Component {
         <div className="container form-group row">
             <input type="text" className="form-control col-7" placeholder="Assign to address" value={this.state.valueAddress} onChange={this.handleChangeAddress} />
             <input type="text" className="form-control col-2" placeholder="Qty" value={this.state.valueQty} onChange={this.handleChangeQty} />
-            <button type="button" className="btn btn-success" onClick={() => this.addToPickingList()}>OK</button>
+            <button type="button" className="btn btn-success" onClick={() => this.stockMovement(this.state.valueAddress, this.state.item_id, this.state.valueQty, "add")}>OK</button>
         </div>
       )
     }
@@ -99,28 +125,34 @@ class Home extends Component {
   displayRow(stockInfo){
     return(
       <tr key={stockInfo.address_id}>
-        <td className="to-center"><i className="fa fa-shopping-cart fa-2x" onClick={() => this.addToPickingList()}></i>
+        <td className="to-center"><i className="fa fa-shopping-cart fa-2x" data-toggle="modal" data-target={`#modal-${stockInfo.address_id}`} onClick={() => this.setState({
+            ...this.state,
+            valueModal: stockInfo.qty
+          })}></i>
         </td>
         <td className="text-center to-center">{stockInfo.address}</td>
         <td className="text-center">
-          <button type="button" className="btn btn-primary" data-toggle="modal" data-target={`#${stockInfo.address_id}`} onClick={() => this.setState({
+          <button type="button" className="btn btn-primary" data-toggle="modal" data-target={`#pick-${stockInfo.address_id}`} onClick={() => this.setState({
               ...this.state,
               valueModal: stockInfo.qty
             })} > - </button>
           {stockInfo.qty}
-          <button type="button" className="btn btn-primary" onClick={() => this.addStock(stockInfo.qty)}> + </button>
+          <button type="button" className="btn btn-primary" data-toggle="modal" data-target={`#add-${stockInfo.address_id}`} onClick={() => this.setState({
+              ...this.state,
+              valueModal: 1
+            })}> + </button>
         </td>
       </tr>
     )
   }
 
-  modal(stockInfo){
+  modalPick(stockInfo){
     return(
-      <div key={stockInfo.address_id} className="modal fade" id={stockInfo.address_id} tabIndex="-1" role="dialog" aria-labelledby="modalPickTitle" aria-hidden="true">
+      <div key={stockInfo.address_id} className="modal fade" id={`pick-${stockInfo.address_id}`} tabIndex="-1" role="dialog" aria-labelledby="modalPickTitle" aria-hidden="true">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="modalPickTitle">Picking item {this.state.item_id}</h5>
+              <h5 className="modal-title" id="modalPickTitle">Picking item {this.state.item_id} in {stockInfo.address}</h5>
               <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -136,7 +168,67 @@ class Home extends Component {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-danger" data-dismiss="modal"> Cancel </button>
-              <button type="button" className="btn btn-success" data-dismiss="modal" onClick={() => this.pick(stockInfo.address, stockInfo.item_id, this.state.valueModal)} >Pick</button>
+              <button type="button" className="btn btn-success" data-dismiss="modal" onClick={() => this.stockMovement(stockInfo.address, stockInfo.item_id, this.state.valueModal, "pick")} >Pick</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  modalPutMoreStock(stockInfo){
+    return(
+      <div key={stockInfo.address_id} className="modal fade" id={`add-${stockInfo.address_id}`} tabIndex="-1" role="dialog" aria-labelledby="modalPickTitle" aria-hidden="true">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="modalPickTitle">Adding stock {this.state.item_id} in {stockInfo.address}</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <p>{this.state.item_description}</p>
+              <div className="input-group">
+                <div className="input-group-prepend">
+                  <span className="input-group-text" id="basic-addon1">Quantities added</span>
+                </div>
+                <input type="text" className="form-control" value={this.state.valueModal} onChange={this.handleChangeModal} />
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-danger" data-dismiss="modal"> Cancel </button>
+              <button type="button" className="btn btn-success" data-dismiss="modal" onClick={() => this.stockMovement(stockInfo.address, stockInfo.item_id, this.state.valueModal, "add")} >Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  modalAddToPickingList(stockInfo){
+    return(
+      <div key={stockInfo.address_id} className="modal fade" id={`modal-${stockInfo.address_id}`} tabIndex="-1" role="dialog" aria-labelledby="modalPickTitle" aria-hidden="true">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="modalPickTitle">Adding to picking list {this.state.item_id} in {stockInfo.address}</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <p>{this.state.item_description}</p>
+              <div className="input-group">
+                <div className="input-group-prepend">
+                  <span className="input-group-text" id="basic-addon1">Quantities added</span>
+                </div>
+                <input type="text" className="form-control" value={this.state.valueModal} onChange={this.handleChangeModal} />
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-danger" data-dismiss="modal"> Cancel </button>
+              <button type="button" className="btn btn-success" data-dismiss="modal" onClick={() => this.addToPickingList(stockInfo)} >Add</button>
             </div>
           </div>
         </div>
@@ -161,12 +253,15 @@ class Home extends Component {
           <div className = "jumbotron container">
             <h2>Item {this.state.item_id}</h2>
             <p>{this.state.item_description}</p>
-            <div className="form-group row col-10 offset-1">
+            <form className="form-group row col-10 offset-1" onSubmit={(event) => {
+                event.preventDefault();
+                this.getItemDetails(this.state.valueItem);
+              } }>
               <div>
                 <input type="text" className="form-control" placeholder="Item code" value={this.state.valueItem} onChange={this.handleChangeItem} />
               </div>
-              <button type="button" className="btn btn-success" onClick={() => this.getItemDetails(this.state.valueItem)}>OK</button>
-            </div>
+              <button type="submit" className="btn btn-success" >OK</button>
+            </form>
             <table className="table table-hover">
               <thead>
                 <tr>
@@ -176,13 +271,22 @@ class Home extends Component {
                 </tr>
               </thead>
               <tbody>
-                {this.state.stock.map(stockInfo => this.displayRow(stockInfo))}
+                {this.state.stock.length === 0
+                  ? (
+                    this.state.item_id === "page"
+                      ? null
+                      : <tr><td colSpan="3">No stock</td></tr>
+                    )
+                  : this.state.stock.map(stockInfo => this.displayRow(stockInfo))
+                }
               </tbody>
             </table>
             {this.allocationModule()}
           </div>
 
-          {this.state.stock.map(stockInfo => this.modal(stockInfo))}
+          {this.state.stock.map(stockInfo => this.modalPick(stockInfo))}
+          {this.state.stock.map(stockInfo => this.modalPutMoreStock(stockInfo))}
+          {this.state.stock.map(stockInfo => this.modalAddToPickingList(stockInfo))}
 
         </div>
       );

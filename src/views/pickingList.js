@@ -22,7 +22,7 @@ class PickingList extends Component {
 
     // return fetch(`/1234/pickingList/dominique`)
     //@todo : recuperer l'email de la personne connectée
-    return fetch(`/${this.props.match.params.store}/pickingList/dominique`)
+    return fetch(`/${this.props.match.params.store}/pickingList/fabien.lebas@decathlon.com`)
     .then(response => response.json())
     .then(result => {
       this.setState({
