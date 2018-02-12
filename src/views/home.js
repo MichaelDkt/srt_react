@@ -12,7 +12,8 @@ class Home extends Component {
       valueItem: "",
       valueAddress: "",
       valueQty: "",
-      valueModal: ""
+      valueModal: "",
+      alertMessage: null
     }
   }
 
@@ -88,9 +89,6 @@ class Home extends Component {
 
   addToPickingList(stockInfo){
     const userEmail = "fabien.lebas@decathlon.com";
-    console.log("add to picking list " + `/${this.props.match.params.store}/pickingList/${userEmail}`);
-    console.log(stockInfo);
-    console.log(`${stockInfo.address_id}-${stockInfo.item_id}-${stockInfo.qty}`);
     fetch(`/${this.props.match.params.store}/pickingList`,{
       headers: {
         "Content-Type": "application/json"
@@ -103,20 +101,44 @@ class Home extends Component {
       })
     })
     .then(result => result.json())
-    .then(result => {
-      console.log("addToPickingList");
-      console.log(result);
-    })
     ;
+  }
+
+  displayAlert(){
+    if (this.state.alertMessage !== null){
+      return(
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <p>{this.state.alertMessage}</p>
+          <button type="button" className="btn btn-secondary" data-dismiss="alert" aria-label="Close">No</button>
+          <button type="button" className="btn btn-warning"  data-dismiss="alert" aria-label="Close">Yes</button>
+        </div>
+      )
+    }
+  }
+
+  checkAddress(){
+    /* CORRECTION A FAIRE SUR LE SERVER : ne renvoie pas exist : true/false
+    fetch(`/${this.props.match.params.store}/addresses/${this.state.valueAddress}`)
+      .then(result => result.json())
+      .then(result => )*/
+    this.setState({
+      ...this.state,
+      alertMessage: "Address does not exist. Do you want to create it?"
+    });
+  }
+
+  addressIsOK(){
+    this.stockMovement(this.state.valueAddress, this.state.item_id, this.state.valueQty, "add");
   }
 
   allocationModule(){
     if(this.state.item_id !== "page") {
       return(
         <div className="container form-group row">
-            <input type="text" className="form-control col-7" placeholder="Assign to address" value={this.state.valueAddress} onChange={this.handleChangeAddress} />
-            <input type="text" className="form-control col-2" placeholder="Qty" value={this.state.valueQty} onChange={this.handleChangeQty} />
-            <button type="button" className="btn btn-success" onClick={() => this.stockMovement(this.state.valueAddress, this.state.item_id, this.state.valueQty, "add")}>OK</button>
+          <input type="text" className="form-control col-7" placeholder="Assign to address" value={this.state.valueAddress} onChange={this.handleChangeAddress} />
+          <input type="text" className="form-control col-2" placeholder="Qty" value={this.state.valueQty} onChange={this.handleChangeQty} />
+          <button type="button" className="btn btn-success" onClick={() => this.checkAddress()}>OK</button>
+          {this.displayAlert()}
         </div>
       )
     }
