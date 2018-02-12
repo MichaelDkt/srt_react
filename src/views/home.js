@@ -106,25 +106,84 @@ class Home extends Component {
 
   displayAlert(){
     if (this.state.alertMessage !== null){
+      console.log("displayAlert " + this.state.alertMessage);
+
       return(
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div className="alert alert-danger alert-dismissible fade show" role="alert" aria-label="Open">
           <p>{this.state.alertMessage}</p>
-          <button type="button" className="btn btn-secondary" data-dismiss="alert" aria-label="Close">No</button>
-          <button type="button" className="btn btn-warning"  data-dismiss="alert" aria-label="Close">Yes</button>
+          <button type="button" className="btn btn-secondary displayAlert" onClick={() => this.setState({
+              ...this.state,
+              alertMessage: null
+            })} data-dismiss="alert" aria-label="Close">No</button>
+          <button type="button" className="btn btn-warning displayAlert"  onClick={() => {
+              if(this.state.alertMessage === "Address does not exist. Do you want to create it?"){
+                this.createAddress();
+              } else if (this.state.alertMessage === "Address is existing but was disabled previously. Do you want to re-enable it?"){
+                this.enableAddress();
+              }
+            }} data-dismiss="alert" aria-label="Close">Yes</button>
         </div>
       )
     }
   }
 
+  createAddress(){
+    fetch(`/${this.props.match.params.store}/addresses/${this.state.valueAddress}`, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "POST"
+    })
+    .then(result => result.json())
+    .then(result => {
+      if(result.code === "201"){
+        this.stockMovement(this.state.valueAddress, this.state.item_id, this.state.valueQty, "add");
+      } else {
+        this.setState({
+          ...this.state,
+          alertMessage: "Error during address creation, please try again"
+        });
+      }
+    })
+  }
+
+  enableAddress(){
+    fetch(`/${this.props.match.params.store}/addresses/${this.state.valueAddress}`, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "DELETE"
+    })
+    .then(result => result.json())
+    .then(result => {
+      if(result.code === "201"){
+        this.stockMovement(this.state.valueAddress, this.state.item_id, this.state.valueQty, "add");
+      } else {
+        this.setState({
+          ...this.state,
+          alertMessage: "Error during address re-enabling, please try again"
+        });
+      }
+    })
+  }
+
   checkAddress(){
-    /* CORRECTION A FAIRE SUR LE SERVER : ne renvoie pas exist : true/false
     fetch(`/${this.props.match.params.store}/addresses/${this.state.valueAddress}`)
       .then(result => result.json())
-      .then(result => )*/
-    this.setState({
-      ...this.state,
-      alertMessage: "Address does not exist. Do you want to create it?"
-    });
+      .then(result => {
+        if(!result.exists){
+          this.setState({
+            ...this.state,
+            alertMessage: "Address does not exist. Do you want to create it?"
+          });
+        } else if (result.disabled){
+          this.setState({
+            ...this.state,
+            alertMessage: "Address is existing but was disabled previously. Do you want to re-enable it?"
+          })
+        }
+      })
+
   }
 
   addressIsOK(){

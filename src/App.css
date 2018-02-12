@@ -46,3 +46,7 @@
 .fa-shopping-cart:hover{
   cursor: pointer;
 }
+
+.displayAlert{
+  margin: 5px;
+}
