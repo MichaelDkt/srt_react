@@ -11,6 +11,7 @@ class Home extends Component {
       stock: [],
       valueItem: "",
       valueAddress: "",
+      valueAddressId: "",
       valueQty: "",
       valueModal: "",
       alertMessage: null
@@ -106,8 +107,6 @@ class Home extends Component {
 
   displayAlert(){
     if (this.state.alertMessage !== null){
-      console.log("displayAlert " + this.state.alertMessage);
-
       return(
         <div className="alert alert-danger alert-dismissible fade show" role="alert" aria-label="Open">
           <p>{this.state.alertMessage}</p>
@@ -148,15 +147,20 @@ class Home extends Component {
   }
 
   enableAddress(){
-    fetch(`/${this.props.match.params.store}/addresses/${this.state.valueAddress}`, {
+    console.log("enableAddress");
+    fetch(`/${this.props.match.params.store}/addresses/${this.state.valueAddressId}`, {
       headers: {
         "Content-Type": "application/json"
       },
-      method: "DELETE"
+      method: "PATCH",
+      body:JSON.stringify({
+        disabled: false
+      })
     })
     .then(result => result.json())
     .then(result => {
-      if(result.code === "201"){
+      console.log(result.code);
+      if(result.code === "200"){
         this.stockMovement(this.state.valueAddress, this.state.item_id, this.state.valueQty, "add");
       } else {
         this.setState({
@@ -179,6 +183,7 @@ class Home extends Component {
         } else if (result.disabled){
           this.setState({
             ...this.state,
+            valueAddressId: result.address_id,
             alertMessage: "Address is existing but was disabled previously. Do you want to re-enable it?"
           })
         }
