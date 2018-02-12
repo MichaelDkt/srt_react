@@ -6,6 +6,7 @@ import Login from './views/login';
 import Home from './views/home';
 import PickingList from './views/pickingList';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import AdminAddressesContainer from './components/adminAddressesContainer';
 
 class App extends Component {
   constructor(props) {
@@ -78,6 +79,9 @@ class App extends Component {
               </div>
             )
             }/>
+
+            <Route exact path="/:store/adminAdresses" component={AdminAddressesContainer}/>
+            <Route path="/:store/home" render={(routerProps) => <Home {...routerProps}/>}/>
         </div>
       </Router>
     );
