@@ -6,7 +6,6 @@ import { GoogleLogin, GoogleLogout } from 'react-google-login';
 class Login extends Component {
 
   render() {
-    console.log(this.props.newState);
     return(
       <div>
         <div className="container" >

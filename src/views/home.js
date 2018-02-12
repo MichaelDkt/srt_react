@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import WithSidebar from './WithSidebar';
 import '../index.css';
 
 class Home extends Component {
@@ -50,7 +51,6 @@ class Home extends Component {
     return fetch(`/${this.props.match.params.store}/items/${item_id}`)
       .then(result => result.json())
       .then(result => {
-        console.log(result);
         this.setState({
           ...this.state,
           item_id: result.item_id,
@@ -63,7 +63,6 @@ class Home extends Component {
 
   stockMovement(address, item_id, qty, method){
     let myBody;
-    console.log("method : " + method);
     if(method === "pick") {
       myBody = {
         item_id: item_id,
@@ -325,57 +324,47 @@ class Home extends Component {
 
   render(){
       return(
-        <div>
-          <title>Item {this.state.item_id}</title>
-          <div className="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-            <h5 className="my-0 mr-md-auto font-weight-normal"> Backroom Tool </h5>
-            <a style = {{marginRight:"24px"}}>{this.props.newState.givenName}</a>
-              <GoogleLogout
-                buttonText="Logout"
-                className= "btn btn-outline-primary"
-                onLogoutSuccess={this.props.logOut}
-              >
-              </GoogleLogout>
-          </div>
-          <div className = "jumbotron container">
-            <h2>Item {this.state.item_id}</h2>
-            <p>{this.state.item_description}</p>
-            <form className="form-group row col-10 offset-1" onSubmit={(event) => {
-                event.preventDefault();
-                this.getItemDetails(this.state.valueItem);
-              } }>
-              <div>
-                <input type="text" className="form-control" placeholder="Item code" value={this.state.valueItem} onChange={this.handleChangeItem} />
-              </div>
-              <button type="submit" className="btn btn-success" >OK</button>
-            </form>
-            <table className="table table-hover">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th className="text-center">Address</th>
-                  <th className="text-center">Stock</th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.state.stock.length === 0
-                  ? (
-                    this.state.item_id === "page"
-                      ? null
-                      : <tr><td colSpan="3">No stock</td></tr>
-                    )
-                  : this.state.stock.map(stockInfo => this.displayRow(stockInfo))
-                }
-              </tbody>
-            </table>
-            {this.allocationModule()}
-          </div>
+        <WithSidebar newState={this.props.newState} logOut={this.props.logOut}>
+          <div>
+            <div className = "jumbotron container">
+              <h2>Item {this.state.item_id}</h2>
+              <p>{this.state.item_description}</p>
+              <form className="form-group row col-10 offset-1" onSubmit={(event) => {
+                  event.preventDefault();
+                  this.getItemDetails(this.state.valueItem);
+                } }>
+                <div>
+                  <input type="text" className="form-control" placeholder="Item code" value={this.state.valueItem} onChange={this.handleChangeItem} />
+                </div>
+                <button type="submit" className="btn btn-success" >OK</button>
+              </form>
+              <table className="table table-hover">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th className="text-center">Address</th>
+                    <th className="text-center">Stock</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.stock.length === 0
+                    ? (
+                      this.state.item_id === "page"
+                        ? null
+                        : <tr><td colSpan="3">No stock</td></tr>
+                      )
+                    : this.state.stock.map(stockInfo => this.displayRow(stockInfo))
+                  }
+                </tbody>
+              </table>
+              {this.allocationModule()}
+            </div>
 
-          {this.state.stock.map(stockInfo => this.modalPick(stockInfo))}
-          {this.state.stock.map(stockInfo => this.modalPutMoreStock(stockInfo))}
-          {this.state.stock.map(stockInfo => this.modalAddToPickingList(stockInfo))}
-
-        </div>
+            {this.state.stock.map(stockInfo => this.modalPick(stockInfo))}
+            {this.state.stock.map(stockInfo => this.modalPutMoreStock(stockInfo))}
+            {this.state.stock.map(stockInfo => this.modalAddToPickingList(stockInfo))}
+          </div>
+        </WithSidebar>
       );
   }
 }

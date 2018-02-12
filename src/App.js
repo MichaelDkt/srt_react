@@ -24,7 +24,6 @@ class App extends Component {
   }
 
   responseGoogle = (googleUser) => {
-    console.log(googleUser);
 
     const profile = googleUser.getBasicProfile();
     this.setState({
@@ -43,7 +42,6 @@ class App extends Component {
 
 
   logOut = () => {
-    console.log("log out");
     this.setState({
       id: null,
       fullname: null,
@@ -57,7 +55,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <Router>
         <div>
@@ -79,7 +76,6 @@ class App extends Component {
               </div>
             )
             }/>
-
             <Route exact path="/:store/adminAdresses" component={AdminAddressesContainer}/>
         </div>
       </Router>
