@@ -148,6 +148,7 @@ class Home extends Component {
 
   enableAddress(){
     console.log("enableAddress");
+    console.log(`/${this.props.match.params.store}/addresses/${this.state.valueAddressId}`);
     fetch(`/${this.props.match.params.store}/addresses/${this.state.valueAddressId}`, {
       headers: {
         "Content-Type": "application/json"
