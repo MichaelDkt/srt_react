@@ -21,10 +21,12 @@ class WithSidebar extends Component {
     return (
         <div className= "container-fluid contentContainer">
           <div className= {this.state.showNav3 ? "sidebar active" : "sidebar"  }>
-            <a style = {{marginRight:"24px"}}>{this.props.newState.givenName}</a>
+          <br/>
+            <a style = {{marginRight:"24px"}}> Welcome {this.props.newState.givenName}</a>
+            <br/>
             <ul>
               <li>Home</li>
-              <li>login</li>
+              <li>My picking list</li>
               <li>admin</li>
             </ul>
             <GoogleLogout
