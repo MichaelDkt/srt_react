@@ -1,7 +1,6 @@
 import React, { Component} from 'react';
 import { Redirect } from 'react-router-dom';
-import ReactDOM from 'react-dom';
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import { GoogleLogin } from 'react-google-login';
 
 class Login extends Component {
 

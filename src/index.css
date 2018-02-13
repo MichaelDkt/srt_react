@@ -22,6 +22,10 @@ body {
   margin-left: -15px;
 }
 
+.sidebar hr {
+  border-bottom: 1px solid rgba(100,100,100,0.3);
+}
+
 .sidebar ul li {
   list-style:none;
   padding:15px;
@@ -29,7 +33,7 @@ body {
 }
 
 .toggle-btn {
-  position:absolute;
+  position:relative;
   left:30px;
   top:20px;
   z-index: 2;

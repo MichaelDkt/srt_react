@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import WithSidebar from './WithSidebar';
 import '../index.css';
 
@@ -88,7 +87,7 @@ class Home extends Component {
   }
 
   addToPickingList(stockInfo){
-    const userEmail = "fabien.lebas@decathlon.com";
+    const userEmail = this.props.newState.email;
     fetch(`/${this.props.match.params.store}/pickingList`,{
       headers: {
         "Content-Type": "application/json"
@@ -146,8 +145,8 @@ class Home extends Component {
   }
 
   enableAddress(){
-    console.log("enableAddress");
-    console.log(`/${this.props.match.params.store}/addresses/${this.state.valueAddressId}`);
+    //console.log("enableAddress");
+    //console.log(`/${this.props.match.params.store}/addresses/${this.state.valueAddressId}`);
     fetch(`/${this.props.match.params.store}/addresses/${this.state.valueAddressId}`, {
       headers: {
         "Content-Type": "application/json"
@@ -159,7 +158,7 @@ class Home extends Component {
     })
     .then(result => result.json())
     .then(result => {
-      console.log(result.code);
+      //console.log(result.code);
       if(result.code === "200"){
         this.stockMovement(this.state.valueAddress, this.state.item_id, this.state.valueQty, "add");
       } else {

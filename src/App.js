@@ -1,11 +1,10 @@
-/* global gapi */
 import React, { Component } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import Login from './views/login';
 import Home from './views/home';
 import PickingList from './views/pickingList';
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import { GoogleLogin } from 'react-google-login';
 import AdminAddressesContainer from './components/adminAddressesContainer';
 
 class App extends Component {
@@ -59,7 +58,7 @@ class App extends Component {
       <Router>
         <div>
             <Route exact path="/" render= {(routerProps) => <Login newState= { this.state }  responseGoogle = {this.responseGoogle} {...routerProps}/>}/>
-            <Route exact path="/:store/pickingList" component={PickingList}/>
+            <Route exact path="/:store/pickingList" render= {(routerProps) => <PickingList newState= { this.state }  {...routerProps}/>}/>
             <Route path="/:store/home" render={(routerProps) => (
               this.state.isLoggedIn === true
                 ? <Home newState= { this.state } logOut = {this.logOut}  {...routerProps}/>
@@ -76,7 +75,7 @@ class App extends Component {
               </div>
             )
             }/>
-            <Route exact path="/:store/adminAdresses" component={AdminAddressesContainer}/>
+            <Route exact path="/:store/adminAdresses" render= {(routerProps) => <AdminAddressesContainer newState= { this.state }  {...routerProps}/>}/>
         </div>
       </Router>
     );

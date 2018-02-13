@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import WithSidebar from '../views/WithSidebar';
 
 
 class AdminAddressesContainer extends Component {
@@ -30,7 +31,7 @@ class AdminAddressesContainer extends Component {
   // -----------------------------------------
   componentDidMount(){
 
-    console.log('store : ' + this.props.match.params.store );
+    //console.log('store : ' + this.props.match.params.store );
 
     return fetch(`/${this.props.match.params.store}/addresses`)
     .then(response => response.json())
@@ -45,8 +46,8 @@ class AdminAddressesContainer extends Component {
         lettersList : this.buildUniqueLettersList()
       });
 
-      console.log(this.state.addressesList);
-      console.log(this.state.lettersList);
+      //console.log(this.state.addressesList);
+      //console.log(this.state.lettersList);
     })
     .catch(error => {
         console.log(error);
@@ -64,7 +65,7 @@ class AdminAddressesContainer extends Component {
   // -------------------------------------------------------
   filterList(event){
     let newList = [];
-    console.log(event.target.checked);
+    //console.log(event.target.checked);
     if (event.target.checked){
       newList = this.state.addressesList;
       // newList = this.state.filteredList;
@@ -76,7 +77,7 @@ class AdminAddressesContainer extends Component {
       ...this.state,
       filteredList : newList
     });
-    console.log('newlist : ' + newList);
+    //console.log('newlist : ' + newList);
   }
 
   // --------------------------
@@ -162,6 +163,8 @@ class AdminAddressesContainer extends Component {
 
   render(){
     return(
+      <WithSidebar newState={this.props.newState} logOut={this.props.logOut}>
+        <div className = "jumbotron container">
       <div className = "container" style={{position:"relative"}}>{ this.state.loading ? <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i> : null}
         <h1 className="text-center">Addresses</h1>
 
@@ -209,29 +212,30 @@ class AdminAddressesContainer extends Component {
         </div>
 
       </div>
+    </div>
+</WithSidebar>
+
     )
   }
 
   insertRow(address){
     return (
-      <div className="row border-bottom" key={address.id}>
-        <div className="col-3">
-          <span className="text-light bg-dark">{ address.address }</span>
-        </div>
-        <div className="col-4">
-          <span>{address.qty_ref} / {address.stock_total}</span>
-        </div>
-        <div className="col-2">
-          {address.qty_ref === "0" && !address.disabled ?
-          <button className="btn btn-sm btn-block btn-danger" title="delete this address" onClick={event => this.disableAddress(address.id, true)}><i className="fa fa-trash"></i></button>
-          : null }
-          { address.disabled ?
-          <button className="btn btn-sm btn-block btn-warning" title="restore this address" onClick={event => this.disableAddress(address.id, false)}><i className="fa fa-backward"></i></button>
-          : null }
-        </div>
-
-
-      </div>
+          <div className="row border-bottom" key={address.id}>
+            <div className="col-3">
+              <span className="text-light bg-dark">{ address.address }</span>
+            </div>
+            <div className="col-4">
+              <span>{address.qty_ref} / {address.stock_total}</span>
+            </div>
+            <div className="col-2">
+              {address.qty_ref === "0" && !address.disabled ?
+              <button className="btn btn-sm btn-block btn-danger" title="delete this address" onClick={event => this.disableAddress(address.id, true)}><i className="fa fa-trash"></i></button>
+              : null }
+              { address.disabled ?
+              <button className="btn btn-sm btn-block btn-warning" title="restore this address" onClick={event => this.disableAddress(address.id, false)}><i className="fa fa-backward"></i></button>
+              : null }
+            </div>
+          </div>
     )
   }
 
@@ -241,9 +245,6 @@ class AdminAddressesContainer extends Component {
       <button type="button" className="btn btn-outline-info btn-sm" onClick={ event => this.filterListByLetter(letter) }>{letter}</button>
     )
   }
-
-
-
 }
 
 

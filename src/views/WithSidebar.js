@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import { GoogleLogout } from 'react-google-login';
+import { Link } from 'react-router-dom';
 import '../index.css';
 
 
@@ -22,12 +23,19 @@ class WithSidebar extends Component {
         <div className= "container-fluid contentContainer">
           <div className= {this.state.showNav3 ? "sidebar active" : "sidebar"  }>
           <br/>
-            <a style = {{marginRight:"24px"}}> Welcome {this.props.newState.givenName}</a>
+            <a>
+            Welcome {this.props.newState.givenName}
+            <img src={this.props.newState.avatar} className="rounded-circle" alt={this.props.newState.givenName}/>
+            </a>
             <br/>
+            <hr/>
             <ul>
-              <li>Home</li>
-              <li>My picking list</li>
-              <li>admin</li>
+              <li>
+              <Link to="/1916/home">Home</Link>
+              </li>
+              <li>
+               <Link to="/1916/PickingList">My picking list</Link>
+              </li>
             </ul>
             <GoogleLogout
               buttonText="Logout"
@@ -36,7 +44,7 @@ class WithSidebar extends Component {
             >
             </GoogleLogout>
           </div>
-          <div className = "content">
+          <div className = "container-fluid">
             <div className= "toggle-btn" onClick={this.toggleSidebar}>
               <span></span>
               <span></span>
