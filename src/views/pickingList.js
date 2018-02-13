@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import WithSidebar from './WithSidebar';
 import '../index.css';
 
 class PickingList extends Component {
@@ -22,7 +23,7 @@ class PickingList extends Component {
 
     // return fetch(`/1234/pickingList/dominique`)
     //@todo : recuperer l'email de la personne connectée
-    return fetch(`/${this.props.match.params.store}/pickingList/fabien.lebas@decathlon.com`)
+    return fetch(`/${this.props.match.params.store}/pickingList/${this.props.newState.email}`)
     .then(response => response.json())
     .then(result => {
       this.setState({
@@ -37,36 +38,6 @@ class PickingList extends Component {
 
   }
 
-/*
-  insertRow(product){
-    return (
-      <tr key={ product.id_picking_list }>
-        <td>
-          { product.address }
-        </td>
-        <td>
-          { product.item_code }
-        </td>
-        <td>
-          { product.item_description }
-        </td>
-        <td>
-          <div className="row">
-            <div className="col">
-              <input type="text" className="form-control form-control-sm" value={ product.qty } onChange={event => this.handleChange(event, product.id_picking_list)} />
-            </div>
-            <div className="col">
-              <button className="btn btn-primary btn-sm" onClick={event => this.pickItem(product.id_picking_list, product.item_code, product.qty, product.address)}>pick</button>
-            </div>
-          </div>
-        </td>
-        <td>
-          <i className="fa fa-trash" onClick={event => this.deletePickingRow(product.id_picking_list)}></i>
-        </td>
-      </tr>
-    );
-  }
-*/
   // -------------------------------
   // insert a row in my picking list
   // -------------------------------
@@ -150,7 +121,6 @@ class PickingList extends Component {
 
     return fetch(`/${this.props.match.params.store}/pickingList/${id_picking_list}`,{
       headers: {
-        // 'Accept': 'application/json',
         "Content-Type": "application/json"
       },
       method: "DELETE"
@@ -169,12 +139,6 @@ class PickingList extends Component {
   // -------------------------------------------------------------
   pickItem(id_picking_list, item_id, qty, address){
     console.log(id_picking_list+"/"+item_id+"/"+qty+"/"+address);
-
-    /*
-    this.setState({
-      loading : true
-    });
-    */
 
     this.setState ({
       ...this.state,
@@ -218,27 +182,19 @@ class PickingList extends Component {
 
   render(){
     return(
-      <div className = "container" style={{position:"relative"}}>
-        <h1 className="text-center">Picking List</h1>{ this.state.loading ? <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i> : null}
-
-        { /*
-        <div className="table-responsive-sm">
-          <table className="table table-bordered table-sm">
-            <thead className="thead-dark">
-              <tr><th>Address</th><th>Item</th><th>Label</th><th>Picking Qty</th><th>{ this.state.loading ? <i className="fa fa-hourglass-start"></i> : null}</th></tr>
-            </thead>
-            <tbody>
-              { this.state.pickingList.map( (product) => this.insertRow(product) ) }
-            </tbody>
-          </table>
-        </div>
-        */ }
+      <WithSidebar newState={this.props.newState} logOut={this.props.logOut}>
         <div>
-        <hr />
-        { this.state.pickingList.map( (product) => this.insertRow(product) ) }
+          <div className = "jumbotron container">
+            <h2>Picking List</h2>{ this.state.loading ?
+              <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i>
+                : null}
+            <div>
+            <hr />
+            { this.state.pickingList.map( (product) => this.insertRow(product) ) }
+            </div>
+          </div>
         </div>
-      </div>
-
+      </WithSidebar>
     );
   }
 }
