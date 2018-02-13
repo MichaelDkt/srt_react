@@ -9,7 +9,9 @@ class Login extends Component {
     return(
       <div>
         <div className="container" >
-              <div className = "row d-flex justify-content-center " style ={{marginTop: "25vh"}}>
+          <h3 className="text-center" style ={{marginTop: "10vh"}}> Welcome to Store Backroom  </h3>
+          <br/>
+              <div className = "row d-flex justify-content-center " style ={{marginTop: "15vh"}}>
               { this.props.newState.isLoggedIn ? (
                   <Redirect to={`/${this.props.match.params.store}/home`}/>
               ) : (
