@@ -11,8 +11,10 @@ class Home extends Component {
       stock: [],
       valueItem: "",
       valueAddress: "",
+      valueAddressId: "",
       valueQty: "",
-      valueModal: ""
+      valueModal: "",
+      alertMessage: null
     }
   }
 
@@ -88,9 +90,6 @@ class Home extends Component {
 
   addToPickingList(stockInfo){
     const userEmail = "fabien.lebas@decathlon.com";
-    console.log("add to picking list " + `/${this.props.match.params.store}/pickingList/${userEmail}`);
-    console.log(stockInfo);
-    console.log(`${stockInfo.address_id}-${stockInfo.item_id}-${stockInfo.qty}`);
     fetch(`/${this.props.match.params.store}/pickingList`,{
       headers: {
         "Content-Type": "application/json"
@@ -103,20 +102,108 @@ class Home extends Component {
       })
     })
     .then(result => result.json())
-    .then(result => {
-      console.log("addToPickingList");
-      console.log(result);
-    })
     ;
+  }
+
+  displayAlert(){
+    if (this.state.alertMessage !== null){
+      return(
+        <div className="alert alert-danger alert-dismissible fade show" role="alert" aria-label="Open">
+          <p>{this.state.alertMessage}</p>
+          <button type="button" className="btn btn-secondary displayAlert" onClick={() => this.setState({
+              ...this.state,
+              alertMessage: null
+            })} data-dismiss="alert" aria-label="Close">No</button>
+          <button type="button" className="btn btn-warning displayAlert"  onClick={() => {
+              if(this.state.alertMessage === "Address does not exist. Do you want to create it?"){
+                this.createAddress();
+              } else if (this.state.alertMessage === "Address is existing but was disabled previously. Do you want to re-enable it?"){
+                this.enableAddress();
+              }
+            }} data-dismiss="alert" aria-label="Close">Yes</button>
+        </div>
+      )
+    }
+  }
+
+  createAddress(){
+    fetch(`/${this.props.match.params.store}/addresses/${this.state.valueAddress}`, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "POST"
+    })
+    .then(result => result.json())
+    .then(result => {
+      if(result.code === "201"){
+        this.stockMovement(this.state.valueAddress, this.state.item_id, this.state.valueQty, "add");
+      } else {
+        this.setState({
+          ...this.state,
+          alertMessage: "Error during address creation, please try again"
+        });
+      }
+    })
+  }
+
+  enableAddress(){
+    console.log("enableAddress");
+    console.log(`/${this.props.match.params.store}/addresses/${this.state.valueAddressId}`);
+    fetch(`/${this.props.match.params.store}/addresses/${this.state.valueAddressId}`, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "PATCH",
+      body:JSON.stringify({
+        disabled: false
+      })
+    })
+    .then(result => result.json())
+    .then(result => {
+      console.log(result.code);
+      if(result.code === "200"){
+        this.stockMovement(this.state.valueAddress, this.state.item_id, this.state.valueQty, "add");
+      } else {
+        this.setState({
+          ...this.state,
+          alertMessage: "Error during address re-enabling, please try again"
+        });
+      }
+    })
+  }
+
+  checkAddress(){
+    fetch(`/${this.props.match.params.store}/addresses/${this.state.valueAddress}`)
+      .then(result => result.json())
+      .then(result => {
+        if(!result.exists){
+          this.setState({
+            ...this.state,
+            alertMessage: "Address does not exist. Do you want to create it?"
+          });
+        } else if (result.disabled){
+          this.setState({
+            ...this.state,
+            valueAddressId: result.address_id,
+            alertMessage: "Address is existing but was disabled previously. Do you want to re-enable it?"
+          })
+        }
+      })
+
+  }
+
+  addressIsOK(){
+    this.stockMovement(this.state.valueAddress, this.state.item_id, this.state.valueQty, "add");
   }
 
   allocationModule(){
     if(this.state.item_id !== "page") {
       return(
         <div className="container form-group row">
-            <input type="text" className="form-control col-7" placeholder="Assign to address" value={this.state.valueAddress} onChange={this.handleChangeAddress} />
-            <input type="text" className="form-control col-2" placeholder="Qty" value={this.state.valueQty} onChange={this.handleChangeQty} />
-            <button type="button" className="btn btn-success" onClick={() => this.stockMovement(this.state.valueAddress, this.state.item_id, this.state.valueQty, "add")}>OK</button>
+          <input type="text" className="form-control col-7" placeholder="Assign to address" value={this.state.valueAddress} onChange={this.handleChangeAddress} />
+          <input type="text" className="form-control col-2" placeholder="Qty" value={this.state.valueQty} onChange={this.handleChangeQty} />
+          <button type="button" className="btn btn-success" onClick={() => this.checkAddress()}>OK</button>
+          {this.displayAlert()}
         </div>
       )
     }

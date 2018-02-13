@@ -81,7 +81,6 @@ class App extends Component {
             }/>
 
             <Route exact path="/:store/adminAdresses" component={AdminAddressesContainer}/>
-            <Route path="/:store/home" render={(routerProps) => <Home {...routerProps}/>}/>
         </div>
       </Router>
     );
