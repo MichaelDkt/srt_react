@@ -42,7 +42,7 @@ class ChangeStore extends Component {
         <td>{store.description}</td>
         <td>{store.country_code}</td>
         <td>{
-          store.id === localStorage.getItem("reserve_id")
+          store.id === localStorage.getItem("store_number")
           ?
           "connected"
           :
