@@ -73,6 +73,8 @@ class Home extends Component {
         qty: qty
       };
     }
+    console.log(`/${this.props.match.params.store}/addresses/${address}`);
+    console.log(myBody);
     fetch(`/${this.props.match.params.store}/addresses/${address}`,{
       headers: {
         "Content-Type": "application/json"
@@ -171,6 +173,7 @@ class Home extends Component {
   }
 
   checkAddress(){
+    console.log(`/${this.props.match.params.store}/addresses/${this.state.valueAddress}`);
     fetch(`/${this.props.match.params.store}/addresses/${this.state.valueAddress}`)
       .then(result => result.json())
       .then(result => {
@@ -185,6 +188,8 @@ class Home extends Component {
             valueAddressId: result.address_id,
             alertMessage: "Address is existing but was disabled previously. Do you want to re-enable it?"
           })
+        } else {
+          this.addressIsOK();
         }
       })
 
