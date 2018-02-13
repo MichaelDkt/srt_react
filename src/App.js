@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import Login from './views/login';
 import Home from './views/home';
 import PickingList from './views/pickingList';
+import ChangeStore from './views/changeStore';
 import { GoogleLogin } from 'react-google-login';
 import AdminAddressesContainer from './components/adminAddressesContainer';
 
@@ -76,6 +77,7 @@ class App extends Component {
             )
             }/>
             <Route exact path="/:store/adminAdresses" render= {(routerProps) => <AdminAddressesContainer newState= { this.state }  {...routerProps}/>}/>
+            <Route exact path="/changeStore" component={ChangeStore}/>
         </div>
       </Router>
     );
