@@ -1,3 +1,4 @@
+/* global gapi */
 import React, { Component } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
