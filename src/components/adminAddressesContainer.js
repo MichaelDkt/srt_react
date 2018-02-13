@@ -67,8 +67,10 @@ class AdminAddressesContainer extends Component {
     console.log(event.target.checked);
     if (event.target.checked){
       newList = this.state.addressesList;
+      // newList = this.state.filteredList;
     } else {
       newList = this.state.addressesList.filter(address => address.disabled === false);
+      // newList = this.state.filteredList.filter(address => address.disabled === false);
     }
     this.setState ({
       ...this.state,
@@ -77,11 +79,30 @@ class AdminAddressesContainer extends Component {
     console.log('newlist : ' + newList);
   }
 
-  // -----------------
-  // enable an address
-  // -----------------
-  enableAddress(id){
-    console.log('id address to disable : '+id);
+  // --------------------------
+  // filter the array by letter
+  // --------------------------
+  filterListByLetter(letter){
+    console.log(letter);
+    let newList = [];
+    if (letter === "removeFilter"){
+      newList = this.state.addressesList;
+    } else {
+      newList = this.state.addressesList.filter(address => address.address.substring(0,1) === letter);
+    }
+
+    this.setState ({
+      ...this.state,
+      filteredList : newList
+    });
+    console.log('newlist : ' + newList);
+  }
+
+  // ------------------
+  // disable an address
+  // ------------------
+  disableAddress(id, targetState){
+    console.log('id address to disable : '+id + "/" + targetState);
     this.setState ({
       ...this.state,
       loading : true
@@ -89,10 +110,10 @@ class AdminAddressesContainer extends Component {
 
     return fetch(`/${this.props.match.params.store}/addresses/${id}`,{
       headers: {
-        // 'Accept': 'application/json',
         "Content-Type": "application/json"
       },
-      method: "DELETE"
+      body: JSON.stringify({ "disabled" : targetState }),
+      method: "PATCH"
     })
     .then(response => response.json())
     .then(result => {
@@ -144,22 +165,21 @@ class AdminAddressesContainer extends Component {
       <div className = "container" style={{position:"relative"}}>{ this.state.loading ? <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i> : null}
         <h1 className="text-center">Addresses</h1>
 
-        <label>
-          including disabled :
-          <input name="disabled" type="checkbox"  onChange={event => this.filterList(event)} />
-        </label>
 
-        <button type="button" className="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Create address</button>
+        <nav class="navbar navbar-light bg-light">
 
-        <ul>
-          {this.state.filteredList.map((address, index) =>
-            <li key={index}>{address.address}-{address.id}- qty_ref : {address.qty_ref} - {address.disabled ? "disabled" : null}</li>
-          )}
-        </ul>
-        <div>
-          <hr />
-          { this.state.filteredList.map( (address) => this.insertRow(address) ) }
-        </div>
+          {/*
+          <label>
+             disabled :
+            <input name="disabled" type="checkbox"  onChange={event => this.filterList(event)} />
+          </label>
+          */}
+          <button type="button" className="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">+</button>
+          <button type="button" className="btn btn-info btn-sm" onClick={ event => this.filterListByLetter("removeFilter") }>(All)</button>
+          { this.state.lettersList.map( (letter) => this.insertLetter(letter))}
+        </nav>
+
+        { this.state.filteredList.map( (address) => this.insertRow(address) ) }
 
         <div  className="modal fade" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModal" aria-hidden="true">
           <div className="modal-dialog" role="document">
@@ -194,23 +214,31 @@ class AdminAddressesContainer extends Component {
 
   insertRow(address){
     return (
-      <div key={address.id}>
-        <div className="row">
-          <div className="col-4">
-            <span className="text-light bg-dark">{ address.address }</span>
-          </div>
-          <div className="col-4">
-            {address.qty_ref === "0" && !address.disabled ?
-            <button className="btn btn-sm btn-block btn-danger" onClick={event => this.enableAddress(address.id)}><i className="fa fa-trash"></i></button>
-            : null }
-          </div>
-          <div className="col-4">
-            <span>{address.disabled ? "disabled" : null}</span>
-          </div>
+      <div className="row border-bottom" key={address.id}>
+        <div className="col-3">
+          <span className="text-light bg-dark">{ address.address }</span>
         </div>
-        <hr/>
-      </div>
+        <div className="col-4">
+          <span>{address.qty_ref} / {address.stock_total}</span>
+        </div>
+        <div className="col-2">
+          {address.qty_ref === "0" && !address.disabled ?
+          <button className="btn btn-sm btn-block btn-danger" title="delete this address" onClick={event => this.disableAddress(address.id, true)}><i className="fa fa-trash"></i></button>
+          : null }
+          { address.disabled ?
+          <button className="btn btn-sm btn-block btn-warning" title="restore this address" onClick={event => this.disableAddress(address.id, false)}><i className="fa fa-backward"></i></button>
+          : null }
+        </div>
 
+
+      </div>
+    )
+  }
+
+  insertLetter(letter){
+    console.log('the letter is : '+letter);
+    return(
+      <button type="button" className="btn btn-outline-info btn-sm" onClick={ event => this.filterListByLetter(letter) }>{letter}</button>
     )
   }
 
