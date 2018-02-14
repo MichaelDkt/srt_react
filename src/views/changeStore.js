@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import '../index.css';
 
+const serverUrl = process.env.REACT_APP_SERVERURL;
+
 class ChangeStore extends Component {
 
   constructor(props){
@@ -17,7 +19,7 @@ class ChangeStore extends Component {
   // ---------------------------
   componentDidMount(){
 
-    return fetch(`/stores`)
+    return fetch(`${serverUrl}/stores`)
     .then(response => response.json())
     .then(result => {
       this.setState({
