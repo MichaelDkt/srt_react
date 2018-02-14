@@ -77,12 +77,11 @@ class App extends Component {
               </NeedsToBeLoggedIn>
             }/>
             <Route exact path="/changeStore" render={(routerProps) =>
-              <NeedsToBeLoggedIn isLoggedIn={this.state.isLoggedIn} onSuccess={this.responseGoogle} onFailure={this.logOut} >
-              <ChangeStore/>
+              <NeedsToBeLoggedIn isLoggedIn={this.state.isLoggedIn} onSuccess={this.responseGoogle} onFailure={this.logOut}  >
+              <ChangeStore {...routerProps}/>
               </NeedsToBeLoggedIn>
             }/>
             <Route exact path="/:store/adminAddresses" render= {(routerProps) => <AdminAddressesContainer newState= { this.state } logOut = {this.logOut} {...routerProps}/>}/>
-            <Route exact path="/changeStore" component={ChangeStore}/>
         </div>
       </Router>
     );
