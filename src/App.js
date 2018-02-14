@@ -1,4 +1,4 @@
-/* global gapi */
+
 import React, { Component } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
@@ -20,13 +20,13 @@ class App extends Component {
       avatar: null,
       email: null,
       id_token: null,
-      isLoggedIn:undefined
+      isLoggedIn:localStorage.getItem("isLoggedIn") ? undefined : false
     }
   }
 
   responseGoogle = (googleUser) => {
-
     const profile = googleUser.getBasicProfile();
+    localStorage.setItem("isLoggedIn", "logged");
     this.setState({
       id: profile.getId(),
       fullname: profile.getName(),
@@ -43,6 +43,7 @@ class App extends Component {
 
 
   logOut = () => {
+    localStorage.removeItem("isLoggedIn");
     this.setState({
       id: null,
       fullname: null,
@@ -60,22 +61,25 @@ class App extends Component {
       <Router>
         <div>
             <Route exact path="/" render= {(routerProps) => <Login newState= { this.state }  responseGoogle = {this.responseGoogle} {...routerProps}/>}/>
-            <Route exact path="/:store/pickingList" render= {(routerProps) => <PickingList newState= { this.state } logOut = {this.logOut} {...routerProps}/>}/>
-            <Route path="/:store/home" render={(routerProps) => (
-              this.state.isLoggedIn === true
-                ? <Home newState= { this.state } logOut = {this.logOut}  {...routerProps}/>
-                : this.state.isLoggedIn === false
-                  ? <Redirect to="/" />
-                :  <div className="fa fa-spinner" style={{fontSize:"24px"}}>
-                <GoogleLogin
-                    clientId= {process.env.REACT_APP_GOOGLECLIENTID}
-                    onSuccess={this.responseGoogle}
-                    onFailure={this.logOut}
-                    isSignedIn={true}
-                    style={{visibility: "hidden"}}
-                ></GoogleLogin>
-              </div>
-            )
+            <Route exact path="/:store/pickingList" render= {(routerProps) =>
+              <NeedsToBeLoggedIn isLoggedIn={this.state.isLoggedIn} onSuccess={this.responseGoogle} onFailure={this.logOut} >
+                <PickingList newState= { this.state } logOut = {this.logOut} {...routerProps}/>
+              </NeedsToBeLoggedIn>
+            }/>
+            <Route path="/:store/home" render={(routerProps) =>
+              <NeedsToBeLoggedIn isLoggedIn={this.state.isLoggedIn} onSuccess={this.responseGoogle} onFailure={this.logOut} >
+                <Home newState= { this.state } logOut = {this.logOut}  {...routerProps}/>
+              </NeedsToBeLoggedIn>
+            }/>
+            <Route exact path="/:store/adminAdresses" render= {(routerProps) =>
+              <NeedsToBeLoggedIn isLoggedIn={this.state.isLoggedIn} onSuccess={this.responseGoogle} onFailure={this.logOut} >
+                <AdminAddressesContainer newState= { this.state } logOut = {this.logOut} {...routerProps}/>
+              </NeedsToBeLoggedIn>
+            }/>
+            <Route exact path="/changeStore" render={(routerProps) =>
+              <NeedsToBeLoggedIn isLoggedIn={this.state.isLoggedIn} onSuccess={this.responseGoogle} onFailure={this.logOut} >
+              <ChangeStore/>
+              </NeedsToBeLoggedIn>
             }/>
             <Route exact path="/:store/adminAddresses" render= {(routerProps) => <AdminAddressesContainer newState= { this.state } logOut = {this.logOut} {...routerProps}/>}/>
             <Route exact path="/changeStore" component={ChangeStore}/>
@@ -83,6 +87,22 @@ class App extends Component {
       </Router>
     );
   }
+}
+
+function NeedsToBeLoggedIn(props) {
+  return props.isLoggedIn === true
+    ? props.children
+    : props.isLoggedIn === false
+      ? <Redirect to="/" />
+      : <div className="fa fa-spinner" style={{fontSize:"24px"}}>
+          <GoogleLogin
+              clientId= {process.env.REACT_APP_GOOGLECLIENTID}
+              onSuccess={props.onSuccess}
+              onFailure={props.Failure}
+              isSignedIn={true}
+              style={{visibility: "hidden"}}
+          ></GoogleLogin>
+        </div>
 }
 
 export default App;
