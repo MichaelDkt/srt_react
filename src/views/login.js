@@ -12,7 +12,15 @@ class Login extends Component {
           <br/>
               <div className = "row d-flex justify-content-center " style ={{marginTop: "15vh"}}>
               { this.props.newState.isLoggedIn ? (
-                  <Redirect to={`/${this.props.match.params.store}/home`}/>
+
+                  // check if the user has a localstorage
+                  localStorage.getItem("store_number") === null ? (
+                    <Redirect to={"/changeStore"} />
+                  )
+                  : (
+                    <Redirect to={"/" + localStorage.getItem("store_number") + "/home"}/>
+                  )
+
               ) : (
                 <GoogleLogin
                 cclientId= {process.env.REACT_APP_GOOGLECLIENTID}

@@ -50,3 +50,8 @@
 .displayAlert{
   margin: 5px;
 }
+
+#photo_avatar{
+  width : 100px;
+  display: block;
+}
