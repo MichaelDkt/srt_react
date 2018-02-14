@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import WithSidebar from './WithSidebar';
 import '../index.css';
 
+const serverUrl = process.env.REACT_APP_SERVERURL;
+
 class Home extends Component {
   constructor(props){
     super(props);
@@ -47,7 +49,7 @@ class Home extends Component {
   }
 
   getItemDetails(item_id){
-    return fetch(`/${this.props.match.params.store}/items/${item_id}`)
+    return fetch(`${serverUrl}/${this.props.match.params.store}/items/${item_id}`)
       .then(result => result.json())
       .then(result => {
         this.setState({
@@ -75,7 +77,7 @@ class Home extends Component {
     }
     console.log(`/${this.props.match.params.store}/addresses/${address}`);
     console.log(myBody);
-    fetch(`/${this.props.match.params.store}/addresses/${address}`,{
+    fetch(`${serverUrl}/${this.props.match.params.store}/addresses/${address}`,{
       headers: {
         "Content-Type": "application/json"
       },
@@ -90,7 +92,7 @@ class Home extends Component {
 
   addToPickingList(stockInfo){
     const userEmail = this.props.newState.email;
-    fetch(`/${this.props.match.params.store}/pickingList`,{
+    fetch(`${serverUrl}/${this.props.match.params.store}/pickingList`,{
       headers: {
         "Content-Type": "application/json"
       },
@@ -127,7 +129,7 @@ class Home extends Component {
   }
 
   createAddress(){
-    fetch(`/${this.props.match.params.store}/addresses/${this.state.valueAddress}`, {
+    fetch(`${serverUrl}/${this.props.match.params.store}/addresses/${this.state.valueAddress}`, {
       headers: {
         "Content-Type": "application/json"
       },
@@ -149,7 +151,7 @@ class Home extends Component {
   enableAddress(){
     //console.log("enableAddress");
     //console.log(`/${this.props.match.params.store}/addresses/${this.state.valueAddressId}`);
-    fetch(`/${this.props.match.params.store}/addresses/${this.state.valueAddressId}`, {
+    fetch(`${serverUrl}/${this.props.match.params.store}/addresses/${this.state.valueAddressId}`, {
       headers: {
         "Content-Type": "application/json"
       },
@@ -174,7 +176,7 @@ class Home extends Component {
 
   checkAddress(){
     console.log(`/${this.props.match.params.store}/addresses/${this.state.valueAddress}`);
-    fetch(`/${this.props.match.params.store}/addresses/${this.state.valueAddress}`)
+    fetch(`${serverUrl}/${this.props.match.params.store}/addresses/${this.state.valueAddress}`)
       .then(result => result.json())
       .then(result => {
         if(!result.exists){
