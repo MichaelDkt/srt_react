@@ -76,7 +76,7 @@ class AdminAddressesContainer extends Component {
         addresses_free = addresses_free + 1;
       }
     }
-    console.log("addresses_free : " + addresses_free);
+    
     this.setState ({
       ...this.state,
       freeRate : Math.round( 100*addresses_free/addresses.length )
@@ -193,7 +193,7 @@ class AdminAddressesContainer extends Component {
         <h6 className="text-center"><em>Availability : {this.state.freeRate} %</em></h6>
 
 
-        <nav class="navbar navbar-light bg-light">
+        <nav className="navbar navbar-light bg-light">
 
           {/*
           <label>
@@ -270,9 +270,8 @@ class AdminAddressesContainer extends Component {
   }
 
   insertLetter(letter){
-    console.log('the letter is : '+letter);
     return(
-      <button type="button" className="btn btn-outline-info btn-sm" onClick={ event => this.filterListByLetter(letter) }>{letter}</button>
+      <button key={letter} type="button" className="btn btn-outline-info btn-sm" onClick={ event => this.filterListByLetter(letter) }>{letter}</button>
     )
   }
 }
