@@ -8,7 +8,7 @@ class Login extends Component {
     return(
       <div>
         <div className="container" >
-          <h3 className="text-center" style ={{marginTop: "10vh"}}> Welcome to Store Backroom  </h3>
+          <h3 className="text-center" style ={{marginTop: "10vh"}}> Welcome to Store Reserve Tool  </h3>
           <br/>
               <div className = "row d-flex justify-content-center " style ={{marginTop: "15vh"}}>
               { this.props.newState.isLoggedIn ? (
