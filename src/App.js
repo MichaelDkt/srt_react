@@ -77,7 +77,7 @@ class App extends Component {
               </div>
             )
             }/>
-            <Route exact path="/:store/adminAdresses" render= {(routerProps) => <AdminAddressesContainer newState= { this.state } logOut = {this.logOut} {...routerProps}/>}/>
+            <Route exact path="/:store/adminAddresses" render= {(routerProps) => <AdminAddressesContainer newState= { this.state } logOut = {this.logOut} {...routerProps}/>}/>
             <Route exact path="/changeStore" component={ChangeStore}/>
         </div>
       </Router>

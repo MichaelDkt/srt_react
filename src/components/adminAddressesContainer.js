@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import WithSidebar from '../views/WithSidebar';
+import '../index.css';
 
+const serverUrl = process.env.REACT_APP_SERVERURL;
 
 class AdminAddressesContainer extends Component {
 
@@ -12,7 +14,8 @@ class AdminAddressesContainer extends Component {
       lettersList : [],
       loading : true,
       addressToCreate : "",
-      error : ""
+      error : "",
+      freeRate : 0
     }
     this.filterList = this.filterList.bind(this);
     this.handleAddressToCreate = this.handleAddressToCreate.bind(this);
@@ -31,14 +34,16 @@ class AdminAddressesContainer extends Component {
   // -----------------------------------------
   componentDidMount(){
 
-    //console.log('store : ' + this.props.match.params.store );
-
-    return fetch(`/${this.props.match.params.store}/addresses`)
+    return fetch(`${serverUrl}/${this.props.match.params.store}/addresses`)
     .then(response => response.json())
     .then(result => {
+
+      this.calculateFreeRate(result);
+
       this.setState({
         addressesList : result,
-        filteredList : result.filter(address => address.disabled === false),
+        // filteredList : result.filter(address => address.disabled === false),
+        filteredList : result,
         loading : false
       });
       this.setState({
@@ -60,6 +65,23 @@ class AdminAddressesContainer extends Component {
     return Array.from(new Set(arrayLetters));
   }
 
+  // ---------------------------------------
+  // calculate the free rate of this reserve
+  // ---------------------------------------
+  calculateFreeRate(addresses){
+
+    let addresses_free = 0;
+    for (let i = 0; i<addresses.length; i++){
+      if (addresses[i].qty_ref === "0" && !addresses[i].disabled){
+        addresses_free = addresses_free + 1;
+      }
+    }
+    
+    this.setState ({
+      ...this.state,
+      freeRate : Math.round( 100*addresses_free/addresses.length )
+    });
+  }
   // -------------------------------------------------------
   // filter the array with or without the disabled addresses
   // -------------------------------------------------------
@@ -109,7 +131,7 @@ class AdminAddressesContainer extends Component {
       loading : true
     });
 
-    return fetch(`/${this.props.match.params.store}/addresses/${id}`,{
+    return fetch(`${serverUrl}/${this.props.match.params.store}/addresses/${id}`,{
       headers: {
         "Content-Type": "application/json"
       },
@@ -135,7 +157,7 @@ class AdminAddressesContainer extends Component {
       loading : true
     });
 
-    return fetch(`/${this.props.match.params.store}/addresses/${addressToCreate}`,{
+    return fetch(`${serverUrl}/${this.props.match.params.store}/addresses/${addressToCreate}`,{
       headers: {
         "Content-Type": "application/json"
       },
@@ -163,13 +185,15 @@ class AdminAddressesContainer extends Component {
 
   render(){
     return(
+
       <WithSidebar newState={this.props.newState} logOut={this.props.logOut}>
         <div className = "jumbotron container">
-      <div className = "container" style={{position:"relative"}}>{ this.state.loading ? <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i> : null}
-        <h1 className="text-center">Addresses</h1>
+        <div className = "container" style={{position:"relative"}}>{ this.state.loading ? <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i> : null}
+        <h1 className="text-center">Admin addresses</h1>
+        <h6 className="text-center"><em>Availability : {this.state.freeRate} %</em></h6>
 
 
-        <nav class="navbar navbar-light bg-light">
+        <nav className="navbar navbar-light bg-light">
 
           {/*
           <label>
@@ -182,7 +206,15 @@ class AdminAddressesContainer extends Component {
           { this.state.lettersList.map( (letter) => this.insertLetter(letter))}
         </nav>
 
-        { this.state.filteredList.map( (address) => this.insertRow(address) ) }
+        <table className="table table-sm table-bordered text-center">
+          <thead className="thead-dark">
+            <tr><th>Addresses</th><th>Busy</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            { this.state.filteredList.map( (address) => this.insertRow(address) ) }
+          </tbody>
+        </table>
+
 
         <div  className="modal fade" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModal" aria-hidden="true">
           <div className="modal-dialog" role="document">
@@ -194,7 +226,6 @@ class AdminAddressesContainer extends Component {
                 </button>
               </div>
               <div className="modal-body">
-                <p>bla bla bla bla</p>
                 <div className="input-group">
                   <div className="input-group-prepend">
                     <span className="input-group-text" id="basic-addon1">Enter your address (X-000) :</span>
@@ -220,29 +251,27 @@ class AdminAddressesContainer extends Component {
 
   insertRow(address){
     return (
-          <div className="row border-bottom" key={address.id}>
-            <div className="col-3">
-              <span className="text-light bg-dark">{ address.address }</span>
-            </div>
-            <div className="col-4">
-              <span>{address.qty_ref} / {address.stock_total}</span>
-            </div>
-            <div className="col-2">
-              {address.qty_ref === "0" && !address.disabled ?
-              <button className="btn btn-sm btn-block btn-danger" title="delete this address" onClick={event => this.disableAddress(address.id, true)}><i className="fa fa-trash"></i></button>
-              : null }
-              { address.disabled ?
-              <button className="btn btn-sm btn-block btn-warning" title="restore this address" onClick={event => this.disableAddress(address.id, false)}><i className="fa fa-backward"></i></button>
-              : null }
-            </div>
-          </div>
+
+      <tr key={address.id}>
+        <td>{ address.address }</td>
+        <td>{ address.stock_total !== "0" ? <i className="fa fa-check"></i> : null }</td>
+        <td>
+          {address.qty_ref === "0" && !address.disabled ?
+          <button className="btn btn-sm btn-danger" title="delete this address" onClick={event => this.disableAddress(address.id, true)}><i className="fa fa-trash"></i></button>
+          : null }
+          { address.disabled ?
+          <button className="btn btn-sm btn-warning" title="restore this address" onClick={event => this.disableAddress(address.id, false)}><i className="fa fa-repeat"></i></button>
+          : null }
+        </td>
+      </tr>
+
+
     )
   }
 
   insertLetter(letter){
-    console.log('the letter is : '+letter);
     return(
-      <button type="button" className="btn btn-outline-info btn-sm" onClick={ event => this.filterListByLetter(letter) }>{letter}</button>
+      <button key={letter} type="button" className="btn btn-outline-info btn-sm" onClick={ event => this.filterListByLetter(letter) }>{letter}</button>
     )
   }
 }
