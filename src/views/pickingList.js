@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import WithSidebar from './WithSidebar';
 import '../index.css';
 
+const serverUrl = process.env.REACT_APP_SERVERURL;
+
 class PickingList extends Component {
 
   constructor(props){
@@ -21,9 +23,7 @@ class PickingList extends Component {
     console.log('store : ' + this.props.match.params.store );
     console.log('email : ' + this.props.match.params.email );
 
-    // return fetch(`/1234/pickingList/dominique`)
-    //@todo : recuperer l'email de la personne connectée
-    return fetch(`/${this.props.match.params.store}/pickingList/${this.props.newState.email}`)
+    return fetch(`${serverUrl}/${this.props.match.params.store}/pickingList/${this.props.newState.email}`)
     .then(response => response.json())
     .then(result => {
       this.setState({
@@ -89,7 +89,7 @@ class PickingList extends Component {
     this.setState({pickingList : newPickingList});
 
     // update the qty in the pickinglist
-    return fetch(`/${this.props.match.params.store}/pickingList/${id_picking_list}`,{
+    return fetch(`${serverUrl}/${this.props.match.params.store}/pickingList/${id_picking_list}`,{
       headers: {
         // 'Accept': 'application/json',
         "Content-Type": "application/json"
@@ -119,7 +119,7 @@ class PickingList extends Component {
       loading : true
     });
 
-    return fetch(`/${this.props.match.params.store}/pickingList/${id_picking_list}`,{
+    return fetch(`${serverUrl}/${this.props.match.params.store}/pickingList/${id_picking_list}`,{
       headers: {
         "Content-Type": "application/json"
       },
@@ -146,7 +146,7 @@ class PickingList extends Component {
     });
 
     // first fetch to pick an item with (x) qty from one address
-    return fetch(`/${this.props.match.params.store}/addresses/${address}`,{
+    return fetch(`${serverUrl}/${this.props.match.params.store}/addresses/${address}`,{
       headers: {
         // 'Accept': 'application/json',
         "Content-Type": "application/json"
