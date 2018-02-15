@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import {Pie} from 'react-chartjs-2';
+
+
 import WithSidebar from '../views/WithSidebar';
 import '../index.css';
 
@@ -173,6 +176,38 @@ class AdminAddressesContainer extends Component {
     });
   }
 
+  drawChart(){
+    const data = {
+    	labels: [
+    		'At least one item % ',
+    		'Empty % '
+    	],
+    	datasets: [{
+    		data: [100 - this.state.freeRate, this.state.freeRate],
+    		backgroundColor: [
+    		'#ff4d4d',
+    		'#00cc00'
+    		],
+    		hoverBackgroundColor: [
+    		'#ff8080',
+    		'#1aff1a'
+    		]
+    	}]
+    };
+    return(
+      <div className="pie">
+        <Pie data={data}
+            width={120}
+          	height={60}
+            legend={null}
+          	options={{
+          		maintainAspectRatio: false
+          	}}
+          />
+      </div>
+    )
+  }
+
 
   render(){
     return(
@@ -181,8 +216,8 @@ class AdminAddressesContainer extends Component {
         <div className = "jumbotron container">
         <div className = "container" style={{position:"relative"}}>{ this.state.loading ? <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i> : null}
         <h2 className="text-center">Admin addresses</h2>
+          {this.drawChart()}
         <h6 className="text-center"><em>Availability : {this.state.freeRate} %</em></h6>
-
 
         <nav className="navbar navbar-light bg-light">
 

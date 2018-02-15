@@ -142,4 +142,8 @@ tbody tr:hover{
           width: 290px;
           height: 78px;
       }
+    }
+
+.pie{
+  margin:5px;
 }
