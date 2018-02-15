@@ -71,7 +71,7 @@ class App extends Component {
                 <Home newState= { this.state } logOut = {this.logOut}  {...routerProps}/>
               </NeedsToBeLoggedIn>
             }/>
-            <Route exact path="/:store/adminAdresses" render= {(routerProps) =>
+            <Route exact path="/:store/admin" render= {(routerProps) =>
               <NeedsToBeLoggedIn isLoggedIn={this.state.isLoggedIn} onSuccess={this.responseGoogle} onFailure={this.logOut} >
                 <AdminAddressesContainer newState= { this.state } logOut = {this.logOut} {...routerProps}/>
               </NeedsToBeLoggedIn>
@@ -81,7 +81,6 @@ class App extends Component {
               <ChangeStore {...routerProps}/>
               </NeedsToBeLoggedIn>
             }/>
-            <Route exact path="/:store/adminAddresses" render= {(routerProps) => <AdminAddressesContainer newState= { this.state } logOut = {this.logOut} {...routerProps}/>}/>
         </div>
       </Router>
     );
