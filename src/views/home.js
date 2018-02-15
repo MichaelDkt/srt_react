@@ -26,7 +26,6 @@ class Home extends Component {
     if (params.has("item_id")){
       const item_id = params.get("item_id");
       this.setState({
-        ...this.state,
         valueItem: item_id
       })
       this.getItemDetails(item_id);
@@ -35,28 +34,24 @@ class Home extends Component {
 
   handleChangeItem = (event) => {
     this.setState({
-      ...this.state,
       valueItem: event.target.value
     })
   }
 
   handleChangeAddress = (event) => {
     this.setState({
-      ...this.state,
       valueAddress: event.target.value
     })
   }
 
   handleChangeQty = (event) => {
     this.setState({
-      ...this.state,
       valueQty: event.target.value
     })
   }
 
   handleChangeModal = (event) => {
     this.setState({
-      ...this.state,
       valueModal: event.target.value
     })
   }
@@ -66,7 +61,6 @@ class Home extends Component {
       .then(result => result.json())
       .then(result => {
         this.setState({
-          ...this.state,
           item_id: result.item_id,
           item_description: result.item_description,
           stock: result.stock
@@ -98,7 +92,6 @@ class Home extends Component {
     .then(result => result.json())
     .then(result => {
       this.setState({
-        ...this.state,
         valueAddress: "",
         valueQty: "",
         alertMessage: null
@@ -130,16 +123,15 @@ class Home extends Component {
         <div className="alert alert-danger alert-dismissible fade show" role="alert" aria-label="Open">
           <p>{this.state.alertMessage}</p>
           <button type="button" className="btn btn-secondary displayAlert" onClick={() => this.setState({
-              ...this.state,
               alertMessage: null
-            })} data-dismiss="alert" aria-label="Close">No</button>
+            })} aria-label="Close">No</button>
           <button type="button" className="btn btn-warning displayAlert"  onClick={() => {
               if(this.state.alertMessage === "Address does not exist. Do you want to create it?"){
                 this.createAddress();
               } else if (this.state.alertMessage === "Address is existing but was disabled previously. Do you want to re-enable it?"){
                 this.enableAddress();
               }
-            }} data-dismiss="alert" aria-label="Close">Yes</button>
+            }} aria-label="Close">Yes</button>
         </div>
       )
     }
@@ -158,7 +150,6 @@ class Home extends Component {
         this.stockMovement(this.state.valueAddress, this.state.item_id, this.state.valueQty, "add");
       } else {
         this.setState({
-          ...this.state,
           alertMessage: "Error during address creation, please try again"
         });
       }
@@ -181,7 +172,6 @@ class Home extends Component {
         this.stockMovement(this.state.valueAddress, this.state.item_id, this.state.valueQty, "add");
       } else {
         this.setState({
-          ...this.state,
           alertMessage: "Error during address re-enabling, please try again"
         });
       }
@@ -194,12 +184,10 @@ class Home extends Component {
       .then(result => {
         if(!result.exists){
           this.setState({
-            ...this.state,
             alertMessage: "Address does not exist. Do you want to create it?"
           });
         } else if (result.disabled){
           this.setState({
-            ...this.state,
             valueAddressId: result.address_id,
             alertMessage: "Address is existing but was disabled previously. Do you want to re-enable it?"
           })
@@ -233,19 +221,16 @@ class Home extends Component {
     return(
       <tr key={stockInfo.address_id}>
         <td className="to-center"><i className="fa fa-shopping-cart fa-2x" data-toggle="modal" data-target={`#modal-${stockInfo.address_id}`} onClick={() => this.setState({
-            ...this.state,
             valueModal: stockInfo.qty
           })}></i>
         </td>
         <td className="text-center to-center">{stockInfo.address}</td>
         <td className="text-center">
           <button type="button" className="btn blueButton" data-toggle="modal" data-target={`#pick-${stockInfo.address_id}`} onClick={() => this.setState({
-              ...this.state,
               valueModal: stockInfo.qty
             })} > - </button>
           {stockInfo.qty}
           <button type="button" className="btn blueButton" data-toggle="modal" data-target={`#add-${stockInfo.address_id}`} onClick={() => this.setState({
-              ...this.state,
               valueModal: 1
             })}> + </button>
         </td>
