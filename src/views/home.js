@@ -20,6 +20,19 @@ class Home extends Component {
     }
   }
 
+  componentDidMount(){
+    const params = new URLSearchParams(this.props.location.search);
+
+    if (params.has("item_id")){
+      const item_id = params.get("item_id");
+      this.setState({
+        ...this.state,
+        valueItem: item_id
+      })
+      this.getItemDetails(item_id);
+    }
+  }
+
   handleChangeItem = (event) => {
     this.setState({
       ...this.state,

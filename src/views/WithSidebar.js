@@ -59,9 +59,10 @@ class WithSidebar extends Component {
                 <Link className="menu" to={`/${localStorage.getItem("store_number")}/PickingList`}>Picking list</Link>
               </li>
               <li>
-                <Link className="menu" to={"/changeStore"}>Change store</Link>
+                <Link to={`/${localStorage.getItem("store_number")}/report`}>Report</Link>
               </li>
               <li>
+                <Link to={"/changeStore"}>Change store</Link>
               </li>
             </ul>
           </div>
