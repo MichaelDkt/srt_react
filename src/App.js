@@ -6,6 +6,7 @@ import Login from './views/login';
 import Home from './views/home';
 import PickingList from './views/pickingList';
 import ChangeStore from './views/changeStore';
+import Report from './views/report';
 import { GoogleLogin } from 'react-google-login';
 import AdminAddressesContainer from './components/adminAddressesContainer';
 
@@ -79,6 +80,11 @@ class App extends Component {
             <Route exact path="/changeStore" render={(routerProps) =>
               <NeedsToBeLoggedIn isLoggedIn={this.state.isLoggedIn} onSuccess={this.responseGoogle} onFailure={this.logOut}  >
               <ChangeStore {...routerProps}/>
+              </NeedsToBeLoggedIn>
+            }/>
+            <Route exact path="/:store/report" render={(routerProps) =>
+              <NeedsToBeLoggedIn isLoggedIn={this.state.isLoggedIn} onSuccess={this.responseGoogle} onFailure={this.logOut}  >
+                <Report newState= { this.state } logOut = {this.logOut} {...routerProps}/>
               </NeedsToBeLoggedIn>
             }/>
         </div>
