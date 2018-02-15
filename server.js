@@ -14,6 +14,14 @@ app.get("/favicon.ico", function (req, res) {
   res.sendFile(path.join(__dirname, "./build/favicon.ico"));
 });
 
+app.get("/logo_decat.png", function (req, res) {
+  res.sendFile(path.join(__dirname, "./build/logo_decat.png"));
+});
+
+app.get("/small_logo_decat.png", function (req, res) {
+  res.sendFile(path.join(__dirname, "./build/small_logo_decat.png"));
+});
+
 app.get("*", function (request, result) {
   result.sendFile(__dirname + "/build/index.html");
 });
