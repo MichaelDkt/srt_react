@@ -13,19 +13,12 @@ class Report extends Component {
       addressesList : [],
       filteredList : [],
       lettersList : [],
+      letter : "",
       loading : true,
-      addressToCreate : "",
+      departmentsList : [],
+      department: "all",
       error : ""
     }
-    this.filterList = this.filterList.bind(this);
-    this.handleAddressToCreate = this.handleAddressToCreate.bind(this);
-  }
-
-  handleAddressToCreate = (event) => {
-    this.setState({
-      ...this.state,
-      addressToCreate: event.target.value
-    })
   }
 
 
@@ -45,10 +38,10 @@ class Report extends Component {
         loading : false
       });
       this.setState({
-        ...this.state,
         lettersList : this.buildUniqueLettersList()
       });
 
+      this.buildDepartmentsList();
     })
     .catch(error => {
         console.log(error);
@@ -61,86 +54,109 @@ class Report extends Component {
     return Array.from(new Set(arrayLetters));
   }
 
+  // -------------------------
+  // build the department list
+  // -------------------------
+  buildDepartmentsList(){
 
-  // -------------------------------------------------------
-  // filter the array with or without the disabled addresses
-  // -------------------------------------------------------
-  filterList(event){
-    let newList = [];
-    if (event.target.checked){
-      newList = this.state.addressesList;
-      // newList = this.state.filteredList;
-    } else {
-      newList = this.state.addressesList.filter(address => address.disabled === false);
-      // newList = this.state.filteredList.filter(address => address.disabled === false);
-    }
-    this.setState ({
-      ...this.state,
-      filteredList : newList
+    return fetch(`${serverUrl}/department`)
+    .then(response => response.json())
+    .then(result => {
+
+      this.setState({
+        departmentsList : result
+      });
+    })
+    .catch(error => {
+        console.log(error);
     });
-    //console.log('newlist : ' + newList);
+
+  }
+
+  // ------------------------------
+  // filter the array by department
+  // ------------------------------
+  filterListByDepartment(department){
+
+    this.setState({
+      ...this.setState,
+      department : department
+    }, () => this.filterArray());
   }
 
   // --------------------------
   // filter the array by letter
   // --------------------------
   filterListByLetter(letter){
-    // console.log(letter);
+
+    this.setState ({
+      ...this.setState,
+      letter : letter
+    }, () => this.filterArray());
+  }
+
+  filterArray(){
+    // console.log("letter : "+this.state.letter);
+    // console.log("department : "+this.state.department);
     let newList = [];
-    if (letter === "removeFilter"){
+    if (this.state.letter === "all" && this.state.department === "all"){
       newList = this.state.addressesList;
-    } else {
-      newList = this.state.addressesList.filter(address => address.address.substring(0,1) === letter);
+    } else if (this.state.letter === "all" && this.state.department !== "all"){
+      newList = this.state.addressesList.filter(address => address.department_description === this.state.department);
+    } else if (this.state.letter !== "all" && this.state.department === "all"){
+      newList = this.state.addressesList.filter(address => address.address.substring(0,1) === this.state.letter);
+    } else if (this.state.letter !== "all" && this.state.department !== "all"){
+      newList = this.state.addressesList.filter(address => address.address.substring(0,1) === this.state.letter && address.department_description === this.state.department);
     }
 
     this.setState ({
-      ...this.state,
+      ...this.setState,
       filteredList : newList
     });
-    // console.log('newlist : ' + newList);
+
   }
 
 
 
 
-
   render(){
+
     return(
 
       <WithSidebar newState={this.props.newState} logOut={this.props.logOut}>
         <div className = "jumbotron container">
-        <div className = "container" style={{position:"relative"}}>{ this.state.loading ? <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i> : null}
-        <h1 className="text-center">Stock report</h1>
+          <div className = "container" style={{position:"relative"}}>{ this.state.loading ? <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i> : null}
+          <h1 className="text-center">Stock report</h1>
 
+          <nav className="navbar navbar-light bg-light">
+            <div className="col">
+              Department : <select className="btn btn-outline-info btn-sm" name="department" value={this.state.department_description} onChange={event => this.filterListByDepartment(event.target.value)}>
+                <option key="all" value="all">( All departments )</option>;
+                {this.state.departmentsList.map((department) => {
+                  return <option key={department.department_description} value={department.department_description}>{department.department_description}</option>;
+                })}
+              </select>
+            </div>
 
+            <div className="col">
+              <button type="button" className={`btn btn-outline-info btn-sm ${this.state.letter === "all" ? "active" : ""}`} onClick={ event => this.filterListByLetter("all") }>(All)</button>
+              { this.state.lettersList.map( (letter) => this.insertLetter(letter))}
+            </div>
 
-        <nav className="navbar navbar-light bg-light">
+          </nav>
 
-          {/*
-          <label>
-             disabled :
-            <input name="disabled" type="checkbox"  onChange={event => this.filterList(event)} />
-          </label>
-          */}
-          <button type="button" className="btn btn-outline-info btn-sm" onClick={ event => this.filterListByLetter("removeFilter") }>(All)</button>
-          { this.state.lettersList.map( (letter) => this.insertLetter(letter))}
-        </nav>
+          <table className="table table-sm table-bordered">
+            <thead className="thead-dark">
+              <tr><th>Addresses</th><th>Item</th><th>Qty</th></tr>
+            </thead>
+            <tbody>
+              { this.state.filteredList.map( (address, index) => this.insertRow(address,index) ) }
+            </tbody>
+          </table>
 
-        <table className="table table-sm table-bordered">
-          <thead className="thead-dark">
-            <tr><th>Addresses</th><th>Item</th><th>Qty</th></tr>
-          </thead>
-          <tbody>
-            { this.state.filteredList.map( (address, index) => this.insertRow(address,index) ) }
-          </tbody>
-        </table>
-
-
-
-
+        </div>
       </div>
-    </div>
-</WithSidebar>
+    </WithSidebar>
 
     )
   }
@@ -164,7 +180,7 @@ class Report extends Component {
 
   insertLetter(letter){
     return(
-      <button key={letter} type="button" className="btn btn-outline-info btn-sm" onClick={ event => this.filterListByLetter(letter) }>{letter}</button>
+      <button key={letter} type="button" className={`btn btn-outline-info btn-sm ${this.state.letter === letter ? "active" : ""}`} onClick={ event => this.filterListByLetter(letter) }>{letter}</button>
     )
   }
 }
