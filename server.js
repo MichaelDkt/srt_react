@@ -10,8 +10,8 @@ app.listen(port, function () {
 
 app.use("/static", express.static('build/static'));
 
-app.get("/open.ico", function (req, res) {
-  res.sendFile(path.join(__dirname, "./build/open.ico"));
+app.get("/favicon.ico", function (req, res) {
+  res.sendFile(path.join(__dirname, "./build/favicon.ico"));
 });
 
 app.get("*", function (request, result) {
