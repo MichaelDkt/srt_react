@@ -8,7 +8,7 @@ class Home extends Component {
   constructor(props){
     super(props);
     this.state = {
-      item_id: "page",
+      item_id: "location",
       item_description: " ",
       stock: [],
       valueItem: "",
@@ -202,14 +202,16 @@ class Home extends Component {
   }
 
   allocationModule(){
-    if(this.state.item_id !== "page") {
+    if(this.state.item_id !== "location") {
       return(
-        <div className="container form-group row">
-          <input type="text" className="form-control col-7" placeholder="Assign to address" value={this.state.valueAddress} onChange={this.handleChangeAddress} />
-          <input type="text" className="form-control col-2" placeholder="Qty" value={this.state.valueQty} onChange={this.handleChangeQty} />
-          <button type="button" className="btn btn-success" onClick={() => this.checkAddress()}>OK</button>
-          {this.displayAlert()}
-        </div>
+        <form className="form offset-1">
+          <div className="form-group row">
+            <input type="text" className="form-control col-6" placeholder="Address" value={this.state.valueAddress} onChange={this.handleChangeAddress} />
+            <input type="text" className="form-control col-3" placeholder="Qty" value={this.state.valueQty} onChange={this.handleChangeQty} />
+            <button type="button" className="btn btn-success" onClick={() => this.checkAddress()}>OK</button>
+            {this.displayAlert()}
+          </div>
+        </form>
       )
     }
   }
@@ -335,11 +337,11 @@ class Home extends Component {
             <div className = "jumbotron container">
               <h2>Item {this.state.item_id}</h2>
               <p>{this.state.item_description}</p>
-              <form className="form-group row col-10 offset-1" onSubmit={(event) => {
+              <form className="form-group row col-10" onSubmit={(event) => {
                   event.preventDefault();
                   this.getItemDetails(this.state.valueItem);
                 } }>
-                <div>
+                <div className="row col-10">
                   <input type="text" className="form-control" placeholder="Item code" value={this.state.valueItem} onChange={this.handleChangeItem} />
                 </div>
                 <button type="submit" className="btn btn-success" >OK</button>
@@ -355,7 +357,7 @@ class Home extends Component {
                 <tbody>
                   {this.state.stock.length === 0
                     ? (
-                      this.state.item_id === "page"
+                      this.state.item_id === "location"
                         ? null
                         : <tr><td colSpan="3">No stock</td></tr>
                       )
@@ -363,7 +365,7 @@ class Home extends Component {
                   }
                 </tbody>
               </table>
-              {this.allocationModule()}
+                {this.allocationModule()}
             </div>
 
             {this.state.stock.map(stockInfo => this.modalPick(stockInfo))}

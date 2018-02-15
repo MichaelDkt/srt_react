@@ -2,6 +2,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+  color:#606060;
 }
 
 .contentContainer {
@@ -16,7 +17,7 @@ body {
   background:#0082C3;
   margin-left:-215px;
   transition: all 300ms linear;
-  color:rgba(230,230,230,0.9);
+  color:white;
 }
 .sidebar.active {
   margin-left: -15px;
@@ -49,4 +50,34 @@ body {
 
 .content {
     position:relative;
+}
+
+.menu {
+  color:white;
+}
+
+.menu:hover{
+  color:#303030;
+  text-decoration: none;
+}
+
+.givenName{
+  font-size:0.9em;
+}
+
+.logOut{
+  color: #0082C3;
+}
+
+.logOut:hover{
+  color: #303030;
+  text-decoration: none;
+}
+
+.srt{
+  font-size: 1.2em;
+}
+
+.hamburger span{
+  background:#606060;
 }

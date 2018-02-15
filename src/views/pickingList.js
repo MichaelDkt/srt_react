@@ -54,7 +54,7 @@ class PickingList extends Component {
         </div>
         <div className="row mt-1">
           <div className="col-5">
-            <span className="text-light bg-dark">{ product.address }</span>
+            <span>{ product.address }</span>
           </div>
           <div className="col-3">
             <input type="text" className="form-control form-control-sm" value={ product.qty } onChange={event => this.handleChange(event, product.id_picking_list)} />
