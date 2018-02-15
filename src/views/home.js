@@ -75,8 +75,6 @@ class Home extends Component {
         qty: qty
       };
     }
-    console.log(`/${this.props.match.params.store}/addresses/${address}`);
-    console.log(myBody);
     fetch(`${serverUrl}/${this.props.match.params.store}/addresses/${address}`,{
       headers: {
         "Content-Type": "application/json"
@@ -178,13 +176,10 @@ class Home extends Component {
   }
 
   checkAddress(){
-    console.log("checkAddress");
-    console.log(`/${this.props.match.params.store}/addresses/${this.state.valueAddress}`);
     fetch(`${serverUrl}/${this.props.match.params.store}/addresses/${this.state.valueAddress}`)
       .then(result => result.json())
       .then(result => {
         if(!result.exists){
-          console.log("n existe pas");
           this.setState({
             ...this.state,
             alertMessage: "Address does not exist. Do you want to create it?"
