@@ -8,7 +8,6 @@ class Login extends Component {
     return(
       <div>
         <div className="container" style ={{textAlign: "center"}} >
-        {/*{// <img src="%PUBLIC_URL%/logo_decat.png" alt="logo_decat"/>}*/}
         <img src="/logo_decat.png" alt="Logo Decathlon"/>
         <br/>
           <h3 className="text-center" style ={{marginTop: "10vh"}}> Welcome to Store Reserve Tool  </h3>
