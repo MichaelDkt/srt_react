@@ -239,12 +239,12 @@ class Home extends Component {
         </td>
         <td className="text-center to-center">{stockInfo.address}</td>
         <td className="text-center">
-          <button type="button" className="btn btn-primary" data-toggle="modal" data-target={`#pick-${stockInfo.address_id}`} onClick={() => this.setState({
+          <button type="button" className="btn blueButton" data-toggle="modal" data-target={`#pick-${stockInfo.address_id}`} onClick={() => this.setState({
               ...this.state,
               valueModal: stockInfo.qty
             })} > - </button>
           {stockInfo.qty}
-          <button type="button" className="btn btn-primary" data-toggle="modal" data-target={`#add-${stockInfo.address_id}`} onClick={() => this.setState({
+          <button type="button" className="btn blueButton" data-toggle="modal" data-target={`#add-${stockInfo.address_id}`} onClick={() => this.setState({
               ...this.state,
               valueModal: 1
             })}> + </button>

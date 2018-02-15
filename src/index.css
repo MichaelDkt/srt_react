@@ -33,6 +33,24 @@ body {
   border-bottom: 1px solid rgba(100,100,100,0.3);
 }
 
+.blueButton{
+  background:#0082C3;
+  color:white;
+  margin:10px !important;
+}
+
+.blueButton:hover{
+  background:#0062C3;
+}
+
+.btn{
+  margin:2px;
+}
+
+input{
+  margin:2px;
+}
+
 .toggle-btn {
   position:relative;
   left:30px;
