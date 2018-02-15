@@ -139,14 +139,14 @@ class Report extends Component {
             </div>
 
             <div className="col">
-              <button type="button" className={`btn btn-outline-info btn-sm ${this.state.letter === "all" ? "active" : ""}`} onClick={ event => this.filterListByLetter("all") }>(All)</button>
+              <button type="button" className={`btn aisleLetter btn-sm ${this.state.letter === "all" ? "active" : ""}`} onClick={ event => this.filterListByLetter("all") }>(All)</button>
               { this.state.lettersList.map( (letter) => this.insertLetter(letter))}
             </div>
 
           </nav>
 
-          <table className="table table-sm table-bordered">
-            <thead className="thead-dark">
+          <table className="table table-hover text-center">
+            <thead>
               <tr><th>Addresses</th><th>Item</th><th>Qty</th></tr>
             </thead>
             <tbody>
@@ -167,7 +167,7 @@ class Report extends Component {
       <tr key={index}>
         <td>{ address.address }</td>
         <td>{ address.item_id !== null ?
-            <Link to={`/${localStorage.getItem("store_number")}/home?item_id=${address.item_id}`}>{address.item_id + " - " + address.item_description}</Link>
+            <Link to={`/${localStorage.getItem("store_number")}/home?item_id=${address.item_id}`} className="clickableText">{address.item_id + " - " + address.item_description}</Link>
             :
             "" }
         </td>
@@ -180,7 +180,7 @@ class Report extends Component {
 
   insertLetter(letter){
     return(
-      <button key={letter} type="button" className={`btn btn-outline-info btn-sm ${this.state.letter === letter ? "active" : ""}`} onClick={ event => this.filterListByLetter(letter) }>{letter}</button>
+      <button key={letter} type="button" className={`btn aisleLetter btn-sm ${this.state.letter === letter ? "active" : ""}`} onClick={ event => this.filterListByLetter(letter) }>{letter}</button>
     )
   }
 }

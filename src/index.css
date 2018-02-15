@@ -67,7 +67,7 @@ input{
 }
 
 .content {
-    position:relative;
+  position:relative;
 }
 
 .menu {
@@ -100,6 +100,34 @@ input{
   background:#606060;
 }
 
+.inputPickingList{
+  width:60px;
+  text-align: center;
+}
+
+.navbar{
+  background-color: #EEEEEE !important;
+}
+
+tbody tr:hover{
+  background-color: #EEEEEE;
+}
+
+.clickableText{
+  color:#0082C3;
+}
+
+.aisleLetter{
+  color:#0082C3;
+  background: transparent;
+  border-color:#0082C3;
+}
+
+.aisleLetter:hover{
+  background:#0082C3;
+  color:white;
+}
+
 .logo_decat{
   background-image: url('/small_logo_decat.png');
   width: 145px;
@@ -107,11 +135,11 @@ input{
 }
 
 
-/* For devices 400px and larger: */
-@media only screen and (min-device-width: 600px) {
-    .logo_decat {
-        background-image: url('/logo_decat.png');
-        width: 290px;
-        height: 78px;
-    }
+  /* For devices 400px and larger: */
+  @media only screen and (min-device-width: 600px) {
+      .logo_decat {
+          background-image: url('/logo_decat.png');
+          width: 290px;
+          height: 78px;
+      }
 }

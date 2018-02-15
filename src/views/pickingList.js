@@ -39,18 +39,17 @@ class PickingList extends Component {
   // -------------------------------
   insertRow(product){
     return (
-      <tr>
-        <td className="to-center">
+      <tr key={product.address}>
+        <td className="to-center col-4">
           <div>
             <span className="text-muted">{ product.item_code } - { product.item_description }</span>
           </div>
           <div>
-            <span>{ product.address }</span>
+            <span className="text-muted">{ product.address }</span>
           </div>
-
         </td>
         <td className="to-center">
-          <input type="text" className="form-control form-control-sm" value={ product.qty } onChange={event => this.handleChange(event, product.id_picking_list)} />
+          <input type="text" className="form-control inputPickingList" value={ product.qty } onChange={event => this.handleChange(event, product.id_picking_list)} />
         </td>
         <td className="to-center">
           <button className="btn btn-sm btn-block btn-danger" onClick={event => this.deletePickingRow(product.id_picking_list)}><i className="fa fa-trash"></i></button>
