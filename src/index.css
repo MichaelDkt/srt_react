@@ -13,7 +13,7 @@ body {
 
 .sidebar {
   flex: 0 0 200px;
-  height:100vh;
+  min-height: 100vh;
   background:#0082C3;
   margin-left:-215px;
   transition: all 300ms linear;
@@ -80,4 +80,20 @@ body {
 
 .hamburger span{
   background:#606060;
+}
+
+.logo_decat{
+  background-image: url('/small_logo_decat.png');
+  width: 145px;
+  height: 39px;
+}
+
+
+/* For devices 400px and larger: */
+@media only screen and (min-device-width: 600px) {
+    .logo_decat {
+        background-image: url('/logo_decat.png');
+        width: 290px;
+        height: 78px;
+    }
 }

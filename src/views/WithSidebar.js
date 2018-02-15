@@ -68,9 +68,19 @@ class WithSidebar extends Component {
           </div>
           <div className = "container-fluid">
             <div className= "toggle-btn hamburger" onClick={this.toggleSidebar}>
-              <span></span>
-              <span></span>
-              <span></span>
+              <div className="row">
+                <div className="col-5">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <div className="col-7" style ={{textAlign: "right", display: "flex", justifyContent: "flex-end"}} >
+                  {this.state.showNav3
+                    ? null
+                    : <div className="logo_decat" style ={{textAlign: "right", display: "flex", justifyContent: "flex-end"}} />
+                  }
+                </div>
+              </div>
             </div>
             {this.props.children}
           </div>
