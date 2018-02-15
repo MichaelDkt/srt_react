@@ -8,7 +8,7 @@ class WithSidebar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showNav3:true
+      showNav3:false
     }
   }
 
