@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import {Pie} from 'react-chartjs-2';
+
 import WithSidebar from './WithSidebar';
 import { Link } from 'react-router-dom';
 import '../index.css';
@@ -13,7 +15,7 @@ class Report extends Component {
       addressesList : [],
       filteredList : [],
       lettersList : [],
-      letter : "",
+      letter : "all",
       loading : true,
       departmentsList : [],
       department: "all",
@@ -21,6 +23,23 @@ class Report extends Component {
     }
   }
 
+  // ---------------------------------------
+  // calculate the free rate of this reserve
+  // ---------------------------------------
+  calculateFreeRate(addresses){
+
+    let addresses_free = 0;
+    for (let i = 0; i<addresses.length; i++){
+      if (addresses[i].qty_ref === "0" && !addresses[i].disabled){
+        addresses_free = addresses_free + 1;
+      }
+    }
+
+    this.setState ({
+      ...this.state,
+      freeRate : Math.round( 100*addresses_free/addresses.length )
+    });
+  }
 
   // -------------------------------------
   // retrieve the stock list of this store
@@ -42,6 +61,11 @@ class Report extends Component {
       });
 
       this.buildDepartmentsList();
+    })
+    .then(result => fetch(`${serverUrl}/${this.props.match.params.store}/addresses`))
+    .then(response => response.json())
+    .then(result => {
+      this.calculateFreeRate(result)
     })
     .catch(error => {
         console.log(error);
@@ -113,10 +137,39 @@ class Report extends Component {
       ...this.setState,
       filteredList : newList
     });
-
   }
 
-
+  drawChart(){
+    const data = {
+      labels: [
+        'At least one item % ',
+        'Empty % '
+      ],
+      datasets: [{
+        data: [100 - this.state.freeRate, this.state.freeRate],
+        backgroundColor: [
+        '#ff4d4d',
+        '#00cc00'
+        ],
+        hoverBackgroundColor: [
+        '#ff8080',
+        '#1aff1a'
+        ]
+      }]
+    };
+    return(
+      <div className="pie">
+        <Pie data={data}
+            width={120}
+            height={60}
+            legend={null}
+            options={{
+              maintainAspectRatio: false
+            }}
+          />
+      </div>
+    )
+  }
 
 
   render(){
@@ -125,28 +178,27 @@ class Report extends Component {
 
       <WithSidebar newState={this.props.newState} logOut={this.props.logOut}>
         <div className = "jumbotron container">
-          <div className = "container" style={{position:"relative"}}>{ this.state.loading ? <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i> : null}
-          <h1 className="text-center">Stock report</h1>
+          <div style={{position:"relative"}}>{ this.state.loading ? <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i> : null}
+          <h2 className="text-center">Stock report</h2>
+          {this.drawChart()}
+          <h6 className="text-center"><em>Availability : {this.state.freeRate} %</em></h6>
 
-          <nav className="navbar navbar-light bg-light">
-            <div className="col">
-              Department : <select className="btn btn-outline-info btn-sm" name="department" value={this.state.department_description} onChange={event => this.filterListByDepartment(event.target.value)}>
-                <option key="all" value="all">( All departments )</option>;
-                {this.state.departmentsList.map((department) => {
-                  return <option key={department.department_description} value={department.department_description}>{department.department_description}</option>;
-                })}
-              </select>
-            </div>
-
-            <div className="col">
-              <button type="button" className={`btn btn-outline-info btn-sm ${this.state.letter === "all" ? "active" : ""}`} onClick={ event => this.filterListByLetter("all") }>(All)</button>
-              { this.state.lettersList.map( (letter) => this.insertLetter(letter))}
-            </div>
-
-          </nav>
-
-          <table className="table table-sm table-bordered">
-            <thead className="thead-dark">
+          <table className="table table-hover text-center">
+            <thead>
+              <tr className="selectLine">
+                <td>
+                  <select className="btn aisleLetter" name="department" value={this.state.department_description} onChange={event => this.filterListByDepartment(event.target.value)}>
+                    <option key="all" value="all">All sports</option>;
+                    {this.state.departmentsList.map((department) => {
+                      return <option key={department.department_description} value={department.department_description}>{department.department_description}</option>;
+                    })}
+                  </select>
+                </td>
+                <td colSpan="2">
+                  <button type="button" className={`btn aisleLetter btn-sm ${this.state.letter === "all" ? "active" : ""}`} onClick={ event => this.filterListByLetter("all") }>All</button>
+                  { this.state.lettersList.map( (letter) => this.insertLetter(letter))}
+                </td>
+              </tr>
               <tr><th>Addresses</th><th>Item</th><th>Qty</th></tr>
             </thead>
             <tbody>
@@ -167,7 +219,7 @@ class Report extends Component {
       <tr key={index}>
         <td>{ address.address }</td>
         <td>{ address.item_id !== null ?
-            <Link to={`/${localStorage.getItem("store_number")}/home?item_id=${address.item_id}`}>{address.item_id + " - " + address.item_description}</Link>
+            <Link to={`/${localStorage.getItem("store_number")}/home?item_id=${address.item_id}`} className="clickableText">{address.item_id + " - " + address.item_description}</Link>
             :
             "" }
         </td>
@@ -180,7 +232,7 @@ class Report extends Component {
 
   insertLetter(letter){
     return(
-      <button key={letter} type="button" className={`btn btn-outline-info btn-sm ${this.state.letter === letter ? "active" : ""}`} onClick={ event => this.filterListByLetter(letter) }>{letter}</button>
+      <button key={letter} type="button" className={`btn aisleLetter btn-sm ${this.state.letter === letter ? "active" : ""}`} onClick={ event => this.filterListByLetter(letter) }>{letter}</button>
     )
   }
 }

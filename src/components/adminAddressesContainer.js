@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import {Pie} from 'react-chartjs-2';
+
+
 import WithSidebar from '../views/WithSidebar';
 import '../index.css';
 
@@ -51,8 +54,6 @@ class AdminAddressesContainer extends Component {
         lettersList : this.buildUniqueLettersList()
       });
 
-      //console.log(this.state.addressesList);
-      //console.log(this.state.lettersList);
     })
     .catch(error => {
         console.log(error);
@@ -76,7 +77,7 @@ class AdminAddressesContainer extends Component {
         addresses_free = addresses_free + 1;
       }
     }
-    
+
     this.setState ({
       ...this.state,
       freeRate : Math.round( 100*addresses_free/addresses.length )
@@ -87,7 +88,6 @@ class AdminAddressesContainer extends Component {
   // -------------------------------------------------------
   filterList(event){
     let newList = [];
-    //console.log(event.target.checked);
     if (event.target.checked){
       newList = this.state.addressesList;
       // newList = this.state.filteredList;
@@ -99,14 +99,12 @@ class AdminAddressesContainer extends Component {
       ...this.state,
       filteredList : newList
     });
-    //console.log('newlist : ' + newList);
   }
 
   // --------------------------
   // filter the array by letter
   // --------------------------
   filterListByLetter(letter){
-    console.log(letter);
     let newList = [];
     if (letter === "removeFilter"){
       newList = this.state.addressesList;
@@ -118,14 +116,12 @@ class AdminAddressesContainer extends Component {
       ...this.state,
       filteredList : newList
     });
-    console.log('newlist : ' + newList);
   }
 
   // ------------------
   // disable an address
   // ------------------
   disableAddress(id, targetState){
-    console.log('id address to disable : '+id + "/" + targetState);
     this.setState ({
       ...this.state,
       loading : true
@@ -151,7 +147,6 @@ class AdminAddressesContainer extends Component {
   // create an address
   // -----------------
   createAddress(addressToCreate){
-    console.log('id address to create : '+addressToCreate);
     this.setState ({
       ...this.state,
       loading : true
@@ -165,7 +160,6 @@ class AdminAddressesContainer extends Component {
     })
     .then(response => response.json())
     .then(result => {
-      console.log(result.code);
       if (result.code === "201"){
         //this.componentDidMount();
         window.location.reload();
@@ -182,16 +176,48 @@ class AdminAddressesContainer extends Component {
     });
   }
 
+  drawChart(){
+    const data = {
+    	labels: [
+    		'At least one item % ',
+    		'Empty % '
+    	],
+    	datasets: [{
+    		data: [100 - this.state.freeRate, this.state.freeRate],
+    		backgroundColor: [
+    		'#ff4d4d',
+    		'#00cc00'
+    		],
+    		hoverBackgroundColor: [
+    		'#ff8080',
+    		'#1aff1a'
+    		]
+    	}]
+    };
+    return(
+      <div className="pie">
+        <Pie data={data}
+            width={120}
+          	height={60}
+            legend={null}
+          	options={{
+          		maintainAspectRatio: false
+          	}}
+          />
+      </div>
+    )
+  }
+
 
   render(){
     return(
 
       <WithSidebar newState={this.props.newState} logOut={this.props.logOut}>
         <div className = "jumbotron container">
-        <div className = "container" style={{position:"relative"}}>{ this.state.loading ? <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i> : null}
-        <h1 className="text-center">Admin addresses</h1>
+        <div style={{position:"relative"}}>{ this.state.loading ? <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i> : null}
+        <h2 className="text-center">Admin addresses</h2>
+          {this.drawChart()}
         <h6 className="text-center"><em>Availability : {this.state.freeRate} %</em></h6>
-
 
         <nav className="navbar navbar-light bg-light">
 
@@ -201,13 +227,13 @@ class AdminAddressesContainer extends Component {
             <input name="disabled" type="checkbox"  onChange={event => this.filterList(event)} />
           </label>
           */}
-          <button type="button" className="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">+</button>
-          <button type="button" className="btn btn-info btn-sm" onClick={ event => this.filterListByLetter("removeFilter") }>(All)</button>
+          <button type="button" className="btn blueButton btn-sm" data-toggle="modal" data-target="#exampleModal">New</button>
+          <button type="button" className="btn aisleLetter btn-sm" onClick={ event => this.filterListByLetter("removeFilter") }>All</button>
           { this.state.lettersList.map( (letter) => this.insertLetter(letter))}
         </nav>
 
-        <table className="table table-sm table-bordered text-center">
-          <thead className="thead-dark">
+        <table className="table table-hover text-center">
+          <thead>
             <tr><th>Addresses</th><th>Busy</th><th>Actions</th></tr>
           </thead>
           <tbody>
@@ -228,7 +254,7 @@ class AdminAddressesContainer extends Component {
               <div className="modal-body">
                 <div className="input-group">
                   <div className="input-group-prepend">
-                    <span className="input-group-text" id="basic-addon1">Enter your address (X-000) :</span>
+                    <span className="input-group-text" id="basic-addon1">Enter your address</span>
                   </div>
                   <input type="text" className="form-control" onChange={this.handleAddressToCreate} />
                 </div>
@@ -271,7 +297,7 @@ class AdminAddressesContainer extends Component {
 
   insertLetter(letter){
     return(
-      <button key={letter} type="button" className="btn btn-outline-info btn-sm" onClick={ event => this.filterListByLetter(letter) }>{letter}</button>
+      <button key={letter} type="button" className="btn aisleLetter btn-sm" onClick={ event => this.filterListByLetter(letter) }>{letter}</button>
     )
   }
 }

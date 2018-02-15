@@ -20,9 +20,6 @@ class PickingList extends Component {
   // ------------------------
   componentDidMount(){
 
-    console.log('store : ' + this.props.match.params.store );
-    console.log('email : ' + this.props.match.params.email );
-
     return fetch(`${serverUrl}/${this.props.match.params.store}/pickingList/${this.props.newState.email}`)
     .then(response => response.json())
     .then(result => {
@@ -30,7 +27,6 @@ class PickingList extends Component {
         pickingList : result,
         loading : false
       });
-      console.log(this.state.pickingList);
     })
     .catch(error => {
         console.log(error);
@@ -43,28 +39,23 @@ class PickingList extends Component {
   // -------------------------------
   insertRow(product){
     return (
-      <div>
-        <div className="row">
-          <div className="col-8">
+      <tr key={product.address}>
+        <td className="to-center col-4">
+          <div>
             <span className="text-muted">{ product.item_code } - { product.item_description }</span>
           </div>
-          <div className="col-4">
-            <button className="btn btn-sm btn-block btn-danger" onClick={event => this.deletePickingRow(product.id_picking_list)}><i className="fa fa-trash"></i></button>
+          <div>
+            <span className="text-muted">{ product.address }</span>
           </div>
-        </div>
-        <div className="row mt-1">
-          <div className="col-5">
-            <span>{ product.address }</span>
-          </div>
-          <div className="col-3">
-            <input type="text" className="form-control form-control-sm" value={ product.qty } onChange={event => this.handleChange(event, product.id_picking_list)} />
-          </div>
-          <div className="col-4">
-            <button className="btn btn-success btn-sm btn-block" onClick={event => this.pickItem(product.id_picking_list, product.item_code, product.qty, product.address)}>Pick</button>
-          </div>
-        </div>
-        <hr />
-      </div>
+        </td>
+        <td className="to-center">
+          <input type="text" className="form-control inputPickingList" value={ product.qty } onChange={event => this.handleChange(event, product.id_picking_list)} />
+        </td>
+        <td className="to-center">
+          <button className="btn btn-sm btn-block btn-danger" onClick={event => this.deletePickingRow(product.id_picking_list)}><i className="fa fa-trash"></i></button>
+          <button className="btn btn-success btn-sm btn-block" onClick={event => this.pickItem(product.id_picking_list, product.item_code, product.qty, product.address)}>Pick</button>
+        </td>
+      </tr>
     )
   }
 
@@ -85,7 +76,6 @@ class PickingList extends Component {
       }
       return product;
     });
-    console.log('newPickingList : '+JSON.stringify(newPickingList) );
     this.setState({pickingList : newPickingList});
 
     // update the qty in the pickinglist
@@ -185,13 +175,15 @@ class PickingList extends Component {
       <WithSidebar newState={this.props.newState} logOut={this.props.logOut}>
         <div>
           <div className = "jumbotron container">
-            <h2>Picking List</h2>{ this.state.loading ?
+            <h2 className="text-center">Picking List</h2>{ this.state.loading ?
               <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i>
                 : null}
-            <div>
-            <hr />
-            { this.state.pickingList.map( (product) => this.insertRow(product) ) }
-            </div>
+            <table className="table table-hover">
+              <thead></thead>
+              <tbody>
+                { this.state.pickingList.map( (product) => this.insertRow(product) ) }
+              </tbody>
+          </table>
           </div>
         </div>
       </WithSidebar>
