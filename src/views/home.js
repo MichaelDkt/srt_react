@@ -86,6 +86,12 @@ class Home extends Component {
     })
     .then(result => result.json())
     .then(result => {
+      this.setState({
+        ...this.state,
+        valueAddress: "",
+        valueQty: "",
+        alertMessage: null
+      });
       this.getItemDetails(this.state.item_id);
     })
   }
@@ -149,8 +155,6 @@ class Home extends Component {
   }
 
   enableAddress(){
-    //console.log("enableAddress");
-    //console.log(`/${this.props.match.params.store}/addresses/${this.state.valueAddressId}`);
     fetch(`${serverUrl}/${this.props.match.params.store}/addresses/${this.state.valueAddressId}`, {
       headers: {
         "Content-Type": "application/json"
@@ -162,7 +166,6 @@ class Home extends Component {
     })
     .then(result => result.json())
     .then(result => {
-      //console.log(result.code);
       if(result.code === "200"){
         this.stockMovement(this.state.valueAddress, this.state.item_id, this.state.valueQty, "add");
       } else {
@@ -175,11 +178,13 @@ class Home extends Component {
   }
 
   checkAddress(){
+    console.log("checkAddress");
     console.log(`/${this.props.match.params.store}/addresses/${this.state.valueAddress}`);
     fetch(`${serverUrl}/${this.props.match.params.store}/addresses/${this.state.valueAddress}`)
       .then(result => result.json())
       .then(result => {
         if(!result.exists){
+          console.log("n existe pas");
           this.setState({
             ...this.state,
             alertMessage: "Address does not exist. Do you want to create it?"
