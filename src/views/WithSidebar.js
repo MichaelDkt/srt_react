@@ -23,7 +23,7 @@ class WithSidebar extends Component {
         <div className= "container-fluid contentContainer">
           <div className= {this.state.showNav3 ? "sidebar active" : "sidebar"  }>
           <br/>
-            <h2 className="text-center">S.R.T.</h2>
+            <h2 className="text-center srt">Store Reserve</h2>
 
             <div className="row">
               <div className="col">
@@ -32,7 +32,17 @@ class WithSidebar extends Component {
             </div>
             <div className="row">
               <div className="col">
-                <h5 className="text-center">{this.props.newState.givenName}</h5>
+                <h5 className="text-center givenName">{this.props.newState.givenName}</h5>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col text-center">
+                <GoogleLogout
+                  buttonText="Logout"
+                  className= "btn btn-light justify-center logOut"
+                  onLogoutSuccess={this.props.logOut}
+                >
+                </GoogleLogout>
               </div>
             </div>
 
@@ -42,25 +52,21 @@ class WithSidebar extends Component {
               <li>
                 {/* <Link to="/1916/home">Home</Link> */}
                 {/* <Link to={`${this.props.match.params.store}/home`}>Home</Link> */}
-                <Link to={`/${localStorage.getItem("store_number")}/home`}>Home</Link>
+                <Link className="menu" to={`/${localStorage.getItem("store_number")}/home`}>Item location</Link>
               </li>
               <li>
                 {/* <Link to="/1916/PickingList">My picking list</Link> */}
-                <Link to={`/${localStorage.getItem("store_number")}/PickingList`}>My picking list</Link>
+                <Link className="menu" to={`/${localStorage.getItem("store_number")}/PickingList`}>Picking list</Link>
               </li>
               <li>
-                <Link to={"/changeStore"}>Change store</Link>
+                <Link className="menu" to={"/changeStore"}>Change store</Link>
+              </li>
+              <li>
               </li>
             </ul>
-            <GoogleLogout
-              buttonText="Logout"
-              className= "btn btn-outline-primary"
-              onLogoutSuccess={this.props.logOut}
-            >
-            </GoogleLogout>
           </div>
           <div className = "container-fluid">
-            <div className= "toggle-btn" onClick={this.toggleSidebar}>
+            <div className= "toggle-btn hamburger" onClick={this.toggleSidebar}>
               <span></span>
               <span></span>
               <span></span>
