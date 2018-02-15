@@ -13,7 +13,7 @@ body {
 .sidebar {
   flex: 0 0 200px;
   height:100vh;
-  background:#151719;
+  background:#0082C3;
   margin-left:-215px;
   transition: all 300ms linear;
   color:rgba(230,230,230,0.9);

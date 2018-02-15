@@ -123,6 +123,10 @@ class Home extends Component {
           <button type="button" className="btn btn-warning displayAlert"  onClick={() => {
               if(this.state.alertMessage === "Address does not exist. Do you want to create it?"){
                 this.createAddress();
+                this.setState={
+                  valueQty:"",
+                  valueAddress:""
+                }
               } else if (this.state.alertMessage === "Address is existing but was disabled previously. Do you want to re-enable it?"){
                 this.enableAddress();
               }
