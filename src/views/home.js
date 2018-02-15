@@ -259,7 +259,7 @@ class Home extends Component {
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="modalPickTitle">Picking item {this.state.item_id} in {stockInfo.address}</h5>
+              <h5 className="modal-title" id="modalPickTitle">Picking item {this.state.item_id} <br/>in {stockInfo.address}</h5>
               <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -289,7 +289,7 @@ class Home extends Component {
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="modalPickTitle">Adding stock {this.state.item_id} in {stockInfo.address}</h5>
+              <h5 className="modal-title" id="modalPickTitle">Adding stock {this.state.item_id} <br/>in {stockInfo.address}</h5>
               <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -319,7 +319,7 @@ class Home extends Component {
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="modalPickTitle">Adding to picking list {this.state.item_id} in {stockInfo.address}</h5>
+              <h5 className="modal-title" id="modalPickTitle">Adding to picking list {this.state.item_id} <br/>in {stockInfo.address}</h5>
               <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -348,8 +348,8 @@ class Home extends Component {
         <WithSidebar newState={this.props.newState} logOut={this.props.logOut}>
           <div>
             <div className = "jumbotron container">
-              <h2>Item {this.state.item_id}</h2>
-              <p>{this.state.item_description}</p>
+              <h2 className="text-center">Item {this.state.item_id}</h2>
+              <p className="text-center">{this.state.item_description}</p>
               <form className="form-group row col-10" onSubmit={(event) => {
                   event.preventDefault();
                   this.getItemDetails(this.state.valueItem);

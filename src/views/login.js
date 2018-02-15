@@ -7,10 +7,10 @@ class Login extends Component {
   render() {
     return(
       <div>
-        <div className="container" style ={{textAlign: "center"}} >
+        <div className="jumbotron container" style ={{textAlign: "center"}} >
         <img src="/logo_decat.png" alt="Logo Decathlon"/>
         <br/>
-          <h3 className="text-center" style ={{marginTop: "10vh"}}> Welcome to Store Reserve Tool  </h3>
+          <h3 className="text-center" style ={{marginTop: "10vh"}}> Welcome to Store Reserve </h3>
           <br/>
               <div className = "row d-flex justify-content-center " style ={{marginTop: "15vh"}}>
               { this.props.newState.isLoggedIn ? (

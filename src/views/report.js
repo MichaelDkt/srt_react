@@ -15,7 +15,7 @@ class Report extends Component {
       addressesList : [],
       filteredList : [],
       lettersList : [],
-      letter : "",
+      letter : "all",
       loading : true,
       departmentsList : [],
       department: "all",
@@ -178,29 +178,27 @@ class Report extends Component {
 
       <WithSidebar newState={this.props.newState} logOut={this.props.logOut}>
         <div className = "jumbotron container">
-          <div className = "container" style={{position:"relative"}}>{ this.state.loading ? <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i> : null}
-          <h2>Stock report</h2>
+          <div style={{position:"relative"}}>{ this.state.loading ? <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i> : null}
+          <h2 className="text-center">Stock report</h2>
           {this.drawChart()}
           <h6 className="text-center"><em>Availability : {this.state.freeRate} %</em></h6>
-          <nav className="navbar navbar-light bg-light">
-            <div className="col">
-              Department : <select className="btn btn-outline-info btn-sm" name="department" value={this.state.department_description} onChange={event => this.filterListByDepartment(event.target.value)}>
-                <option key="all" value="all">( All departments )</option>;
-                {this.state.departmentsList.map((department) => {
-                  return <option key={department.department_description} value={department.department_description}>{department.department_description}</option>;
-                })}
-              </select>
-            </div>
-
-            <div className="col">
-              <button type="button" className={`btn aisleLetter btn-sm ${this.state.letter === "all" ? "active" : ""}`} onClick={ event => this.filterListByLetter("all") }>(All)</button>
-              { this.state.lettersList.map( (letter) => this.insertLetter(letter))}
-            </div>
-
-          </nav>
 
           <table className="table table-hover text-center">
             <thead>
+              <tr className="selectLine">
+                <td>
+                  <select className="btn aisleLetter" name="department" value={this.state.department_description} onChange={event => this.filterListByDepartment(event.target.value)}>
+                    <option key="all" value="all">All sports</option>;
+                    {this.state.departmentsList.map((department) => {
+                      return <option key={department.department_description} value={department.department_description}>{department.department_description}</option>;
+                    })}
+                  </select>
+                </td>
+                <td colSpan="2">
+                  <button type="button" className={`btn aisleLetter btn-sm ${this.state.letter === "all" ? "active" : ""}`} onClick={ event => this.filterListByLetter("all") }>All</button>
+                  { this.state.lettersList.map( (letter) => this.insertLetter(letter))}
+                </td>
+              </tr>
               <tr><th>Addresses</th><th>Item</th><th>Qty</th></tr>
             </thead>
             <tbody>

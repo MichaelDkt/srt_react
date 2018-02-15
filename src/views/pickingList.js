@@ -175,7 +175,7 @@ class PickingList extends Component {
       <WithSidebar newState={this.props.newState} logOut={this.props.logOut}>
         <div>
           <div className = "jumbotron container">
-            <h2>Picking List</h2>{ this.state.loading ?
+            <h2 className="text-center">Picking List</h2>{ this.state.loading ?
               <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i>
                 : null}
             <table className="table table-hover">

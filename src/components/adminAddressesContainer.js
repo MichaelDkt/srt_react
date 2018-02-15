@@ -214,7 +214,7 @@ class AdminAddressesContainer extends Component {
 
       <WithSidebar newState={this.props.newState} logOut={this.props.logOut}>
         <div className = "jumbotron container">
-        <div className = "container" style={{position:"relative"}}>{ this.state.loading ? <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i> : null}
+        <div style={{position:"relative"}}>{ this.state.loading ? <i className="fa fa-hourglass-start fa-2x" style={{position:"absolute",top:"10px",right:"10px"}}></i> : null}
         <h2 className="text-center">Admin addresses</h2>
           {this.drawChart()}
         <h6 className="text-center"><em>Availability : {this.state.freeRate} %</em></h6>
@@ -254,7 +254,7 @@ class AdminAddressesContainer extends Component {
               <div className="modal-body">
                 <div className="input-group">
                   <div className="input-group-prepend">
-                    <span className="input-group-text" id="basic-addon1">Enter your address (X-000) :</span>
+                    <span className="input-group-text" id="basic-addon1">Enter your address</span>
                   </div>
                   <input type="text" className="form-control" onChange={this.handleAddressToCreate} />
                 </div>

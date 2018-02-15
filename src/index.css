@@ -36,7 +36,7 @@ body {
 .blueButton{
   background:#0082C3;
   color:white;
-  margin:10px !important;
+  margin:5px !important;
 }
 
 .blueButton:hover{
@@ -105,7 +105,7 @@ input{
   text-align: center;
 }
 
-.navbar{
+.navbar, .selectLine{
   background-color: #EEEEEE !important;
 }
 
