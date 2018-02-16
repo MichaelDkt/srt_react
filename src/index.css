@@ -129,9 +129,7 @@ tbody tr:hover{
 }
 
 .logo_decat{
-  background-image: url('/small_logo_decat.png');
-  width: 145px;
-  height: 39px;
+  display: none;
 }
 
 

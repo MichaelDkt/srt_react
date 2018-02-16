@@ -190,7 +190,7 @@ class Report extends Component {
                   <select className="btn aisleLetter" name="department" value={this.state.department_description} onChange={event => this.filterListByDepartment(event.target.value)}>
                     <option key="all" value="all">All sports</option>;
                     {this.state.departmentsList.map((department) => {
-                      return <option key={department.department_description} value={department.department_description}>{department.department_description}</option>;
+                      return <option  key={department.department_description} value={department.department_description}>{department.department_description.substring(0,20)}</option>;
                     })}
                   </select>
                 </td>
